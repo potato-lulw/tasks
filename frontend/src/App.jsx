@@ -9,27 +9,40 @@ import { Toaster } from "sonner"
 import Trash from "./pages/Trash"
 import Users from "./pages/Users"
 import { useTheme } from "./components/ThemeContextProvider"
+import { useSelector } from "react-redux"
+import Sidebar from "./components/ui/Sidebar"
+import { ModeToggle } from "./components/Toggle"
 
 const Layout = () => {
-  const user = "";
+  const { user } = useSelector((state) => state.auth);
+  const isSidebarOpen = useSelector((state) => state.auth.isSidebarOpen);
   const location = useLocation();
-  return user ? 
-  (<div className="w-full flex flex-col md:flex-row h-screen justify-center items-center">
-    <div className="h-screen bg-background sticky top-0 hidden md:block">
-      {/* <Sidebar/> */}
-    </div>
-    
-    {/* <MobileSidebar/> */}
+  return user ?
+    (<div className="w-full flex flex-col md:flex-row h-screen justify-center items-center  ">
+      {
+        isSidebarOpen && (
+          <div className="h-screen bg-background sticky top-0 left-0 hidden md:block">
+            <Sidebar />
+          </div>
+        )
+      }
 
-    <div className="flex-1 overflow-y-auto">
-      {/* <Navbar/> */}
-      <div className="p-4 2xl:px-10">
-        <Outlet/>
+      {/* <MobileSidebar/> */}
+
+      <div className="flex flex-col flex-1 min-h-screen">
+        <div className="h-4 bg-background hidden md:block"></div>
+        <div className="flex-1 overflow-y-auto md:border-2 border-border rounded-tl-2xl">
+          {/* <Navbar/> */}
+          <div className="p-4 2xl:px-10  ">
+            <Outlet />
+          </div>
+        </div>
       </div>
-    </div>
-  </div>) 
-  : 
-  (<Navigate to='/login' state={{ from: location }} replace />);
+
+
+    </div>)
+    :
+    (<Navigate to='/login' state={{ from: location }} replace />);
 }
 
 
@@ -37,7 +50,7 @@ function App() {
   const { theme } = useTheme()
   return (
     <main>
-      <div className={`flex min-h-screen justify-center items-center custom-svg-background  w-full ${theme == 'dark'? 'dark': ''}`}>
+      <div className={`flex min-h-screen justify-center items-center custom-svg-background w-full `}>
         <Routes>
           <Route element={<Layout />}>
 
