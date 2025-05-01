@@ -7,13 +7,13 @@ import { chartData } from "@/assets/data"
 const chartConfig = {
     tasks: {
         label: "Tasks",
-        color: "#10b981", // Indigo-600
+        color: "#10b981", 
     },
 }
 
 const MyChart = () => {
     return (
-        <ChartContainer config={chartConfig} className="min-h-[240px] w-full">
+        <ChartContainer config={chartConfig} className="max-h-[300px] 2xl:min-h-[500px] bg-secondary rounded-md p-2">
             <BarChart data={chartData}>
                 <CartesianGrid vertical={false} strokeDasharray="3 3" />
                 <XAxis
