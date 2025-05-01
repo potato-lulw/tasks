@@ -31,15 +31,15 @@ const Navbar = () => {
       <MobileSidebar />
 
       <div className='flex flex-row gap-2 items-center'>
-        {
-          !isSidebarOpen && (
-            <div className='flex gap-2'>
-              <Button variant={"outline"} onClick={openSidebar}><LuPanelLeftOpen /> </Button>
-              <ModeToggle />
-            </div>
 
-          )
-        }
+
+        <div className='flex gap-2 md:hidden '>
+          <Button variant={"outline"} onClick={openSidebar}><LuPanelLeftOpen /> </Button>
+          <ModeToggle />
+        </div>
+
+
+
         <div className='rounded-full hidden md:flex flex-row gap-2 border border-border items-center justify-between px-2 py-1  bg-secondary'>
           <IoSearch />
           <input type="text" name="search" id="search" className='focus:outline-none ' />

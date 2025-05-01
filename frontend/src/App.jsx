@@ -13,35 +13,40 @@ import { useSelector } from "react-redux"
 import Sidebar from "./components/ui/Sidebar"
 import { ModeToggle } from "./components/Toggle"
 import Navbar from "./components/ui/Navbar"
+import MiniSidebar from "./components/ui/MiniSidebar"
 
 const Layout = () => {
   const { user } = useSelector((state) => state.auth);
   const isSidebarOpen = useSelector((state) => state.auth.isSidebarOpen);
   const location = useLocation();
   return user ?
-    (<div className="w-full flex flex-col md:flex-row h-screen justify-center items-center  ">
-      {
-        isSidebarOpen && (
-          <div className="h-screen bg-background sticky top-0 left-0 hidden md:block">
-            <Sidebar />
-          </div>
-        )
-      }
+    (<div className="w-full flex flex-col md:flex-row min-h-screen">
+      {/* Sidebar */}
+      {isSidebarOpen && (
+        <div className="bg-background hidden md:block max-h-screen">
+          <Sidebar />
+        </div>
+      )}
 
-      
+      {!isSidebarOpen && (
+        <div className="bg-background hidden md:block max-h-screen">
+          <MiniSidebar />
+        </div>
+      )}
 
-      <div className="flex flex-col flex-1 min-h-screen w-full">
-        <div className="h-4 bg-background hidden md:block"></div>
-        <div className="flex-1 overflow-y-auto md:border-2 border-border rounded-tl-2xl p-4 2xl:px-10 h-full">
+      {/* Main Content */}
+      <div className="flex flex-col flex-1 w-full max-h-screen overflow-hidden">
+        <div className="h-4 bg-background hidden md:block" />
+
+        <div className="flex-1 overflow-y-auto md:border-2 border-border rounded-tl-2xl p-4 2xl:px-10">
           <Navbar />
-          <div className=" h-full">
+          <div>
             <Outlet />
           </div>
         </div>
       </div>
-
-
-    </div>)
+    </div>
+    )
     :
     (<Navigate to='/login' state={{ from: location }} replace />);
 }
