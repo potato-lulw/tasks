@@ -12,6 +12,7 @@ import { useTheme } from "./components/ThemeContextProvider"
 import { useSelector } from "react-redux"
 import Sidebar from "./components/ui/Sidebar"
 import { ModeToggle } from "./components/Toggle"
+import Navbar from "./components/ui/Navbar"
 
 const Layout = () => {
   const { user } = useSelector((state) => state.auth);
@@ -27,13 +28,13 @@ const Layout = () => {
         )
       }
 
-      {/* <MobileSidebar/> */}
+      
 
-      <div className="flex flex-col flex-1 min-h-screen">
+      <div className="flex flex-col flex-1 min-h-screen w-full">
         <div className="h-4 bg-background hidden md:block"></div>
-        <div className="flex-1 overflow-y-auto md:border-2 border-border rounded-tl-2xl">
-          {/* <Navbar/> */}
-          <div className="p-4 2xl:px-10  ">
+        <div className="flex-1 overflow-y-auto md:border-2 border-border rounded-tl-2xl p-4 2xl:px-10">
+          <Navbar />
+          <div className=" ">
             <Outlet />
           </div>
         </div>
