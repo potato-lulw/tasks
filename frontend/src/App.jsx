@@ -32,9 +32,9 @@ const Layout = () => {
 
       <div className="flex flex-col flex-1 min-h-screen w-full">
         <div className="h-4 bg-background hidden md:block"></div>
-        <div className="flex-1 overflow-y-auto md:border-2 border-border rounded-tl-2xl p-4 2xl:px-10">
+        <div className="flex-1 overflow-y-auto md:border-2 border-border rounded-tl-2xl p-4 2xl:px-10 h-full">
           <Navbar />
-          <div className=" ">
+          <div className=" h-full">
             <Outlet />
           </div>
         </div>
