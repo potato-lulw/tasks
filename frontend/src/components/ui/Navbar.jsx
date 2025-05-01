@@ -30,7 +30,7 @@ const Navbar = () => {
 
       <MobileSidebar />
 
-      <div>
+      <div className='flex flex-row gap-2 items-center'>
         {
           !isSidebarOpen && (
             <div className='flex gap-2'>
@@ -40,28 +40,29 @@ const Navbar = () => {
 
           )
         }
+        <div className='rounded-full hidden md:flex flex-row gap-2 border border-border items-center justify-between px-2 py-1  bg-secondary'>
+          <IoSearch />
+          <input type="text" name="search" id="search" className='focus:outline-none ' />
+        </div>
       </div>
-      
+
 
 
 
       <div className='flex flex-row gap-2 justify-center items-center'>
-        <div className='rounded-full hidden md:flex flex-row gap-2 border border-border items-center justify-between px-2 py-1  '>
-          <IoSearch />
-          <input type="text" name="search" id="search" className='focus:outline-none ' />
-        </div>
+
         <div className='md:hidden block'>
           <DropdownMenu>
             <DropdownMenuTrigger className="flex items-center"><IoSearch /></DropdownMenuTrigger>
             <DropdownMenuContent>
               {/* <div className='rounded-full hidden md:flex flex-row gap-2 border border-border items-center justify-between   '>
                 <FaSearch /> */}
-                <input type="text" name="search" id="search" className='focus:outline-none ' />
+              <input type="text" name="search" id="search" className='focus:outline-none bg-secondary' />
               {/* </div> */}
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
-        <NotificationPanel/>
+        <NotificationPanel />
         <UserAvatar />
       </div>
     </div>
