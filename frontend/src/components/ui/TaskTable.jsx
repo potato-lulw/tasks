@@ -9,8 +9,9 @@ import {
 } from "@/components/ui/table"
 import { MdKeyboardArrowDown, MdKeyboardArrowUp, MdKeyboardDoubleArrowUp } from "react-icons/md"
 import { tasks } from "@/assets/data"
-import { formatDate, getInitials } from "@/utils/utils"
+import { formatDate } from "@/utils/utils"
 import { TASK_TYPE } from "@/utils/utils"
+import UserInfo from "./UserInfo"
 const TaskTable = () => {
 
 
@@ -54,20 +55,13 @@ const TaskTable = () => {
 
                         <TableCell className="align-middle">
                             <div className="flex -space-x-2">
-                                {task.team.map((member, index) => {
-                                    const bgColors = ["#f0766e", "#facc15", "#1d4ed8"];
-                                    const colorClass = bgColors[index % bgColors.length];
+                                {task.team.map(({_id, name, title, email}, index) => (
+                                    <div key={_id}>
 
-                                    return (
-                                        <div
-                                            key={member._id}
-                                            className={`w-8 h-8 rounded-full text-white flex items-center justify-center text-sm bg-[${colorClass}]`}
-                                            title={member.name}
-                                        >
-                                            {getInitials(member.name)}
-                                        </div>
-                                    );
-                                })}
+                                        <UserInfo name={name} title={title} email={email} index={index}   />
+                                    </div>
+                                    
+                                ))}
                             </div>
                         </TableCell>
 

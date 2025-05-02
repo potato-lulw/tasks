@@ -4,6 +4,7 @@ import MyCard from "@/components/ui/MyCard";
 import Card from "@/components/ui/MyCard";
 import MyChart from "@/components/ui/MyChart";
 import TaskTable from "@/components/ui/TaskTable";
+import UsersTable from "@/components/ui/UsersTable";
 
 import { LucideClipboardEdit } from "lucide-react";
 
@@ -67,6 +68,13 @@ const Dashboard = () => {
         </div>
 
         <div className="p-2 md:p-8 bg-background rounded-xl 2xl:w-1/2 w-full">
+
+          <UsersTable />
+        </div>
+      </div>
+
+      <div>
+        <div className="p-2 md:p-8 bg-background rounded-xl  w-full">
 
           <TaskTable />
         </div>
