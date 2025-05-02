@@ -49,7 +49,7 @@ const Dashboard = () => {
   ];
 
   return (
-    <div className="h-full p-3 flex flex-col gap-4">
+    <div className="h-full  flex flex-col gap-4 my-2">
       <div className="grid grid-cols-1 md:grid-cols-4 gap-5">
         {
           stats.map((stat) => (
