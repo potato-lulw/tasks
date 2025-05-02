@@ -329,7 +329,7 @@ export const summary = {
                     email: "jane.smith@example.com",
                 },
             ],
-            isTrashed: false,
+            isTrashed: true,
             activities: [],
             subTasks: [
                 {
@@ -372,7 +372,7 @@ export const summary = {
                     email: "emily.wilson@example.com",
                 },
             ],
-            isTrashed: false,
+            isTrashed: true,
             activities: [],
             subTasks: [
                 {
@@ -725,7 +725,7 @@ export const tasks = [
                 email: "jane.smith@example.com",
             },
         ],
-        isTrashed: false,
+        isTrashed: true,
         activities: [
             {
                 type: "assigned",

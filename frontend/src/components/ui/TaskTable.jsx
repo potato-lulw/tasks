@@ -8,11 +8,13 @@ import {
     TableRow,
 } from "@/components/ui/table"
 import { MdKeyboardArrowDown, MdKeyboardArrowUp, MdKeyboardDoubleArrowUp } from "react-icons/md"
-import { tasks } from "@/assets/data"
+
 import { formatDate } from "@/utils/utils"
 import { TASK_TYPE } from "@/utils/utils"
 import UserInfo from "./UserInfo"
-const TaskTable = () => {
+import { FiDelete } from "react-icons/fi"
+import { BiRecycle, BiTrash } from "react-icons/bi"
+const TaskTable = ({ tasks, isTrash = false }) => {
 
 
     const icons = {
@@ -21,7 +23,7 @@ const TaskTable = () => {
         low: <MdKeyboardArrowDown size={24} />
     }
 
-    
+
     return (
         <Table className={`bg-background rounded-xl text-xs`}>
 
@@ -31,7 +33,8 @@ const TaskTable = () => {
                     <TableHead className="w-[80px] sm:w-[100px]">Priority</TableHead>
                     <TableHead className="w-[100px] sm:w-[160px]">Team</TableHead>
                     <TableHead className="text-right w-[100px] sm:w-[140px]">Created At</TableHead>
-
+                    {isTrash && <TableHead className="text-right w-[100px] sm:w-[140px]">Updated At</TableHead>}
+                    {isTrash && <TableHead className="text-right w-[100px] sm:w-[140px]">Actions</TableHead>}
                 </TableRow>
             </TableHeader>
 
@@ -55,12 +58,12 @@ const TaskTable = () => {
 
                         <TableCell className="align-middle">
                             <div className="flex -space-x-2">
-                                {task.team.map(({_id, name, title, email}, index) => (
+                                {task.team.map(({ _id, name, title, email }, index) => (
                                     <div key={_id}>
 
-                                        <UserInfo name={name} title={title} email={email} index={index}   />
+                                        <UserInfo name={name} title={title} email={email} index={index} />
                                     </div>
-                                    
+
                                 ))}
                             </div>
                         </TableCell>
@@ -69,6 +72,18 @@ const TaskTable = () => {
                         <TableCell className="align-middle text-right">
                             {formatDate(new Date(task.createdAt))}
                         </TableCell>
+                        {
+                            isTrash && <TableCell className="align-middle text-right">
+                                {formatDate(new Date(task.updatedAt))}
+                            </TableCell>
+                        }
+
+                        {isTrash && <TableCell className=" text-right">
+                            <div className="flex gap-2 text-right justify-end">
+                                <button className="text-green-500"><BiRecycle size={20}/></button>
+                                <button className="text-destructive"><BiTrash size={20}/></button>
+                            </div>
+                        </TableCell>}
                     </TableRow>
 
                 ))}

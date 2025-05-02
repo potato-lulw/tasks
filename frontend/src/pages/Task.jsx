@@ -18,7 +18,7 @@ const Task = () => {
     <div className='h-full  flex flex-col gap-4 my-2'>
       <div className='flex items-center justify-between py-2'>
         <p className='text-2xl font-medium'>Tasks</p>
-        <Button className="font-medium flex gap-2 py-6 px-4 items-center md:text-xl text-base hover:cursor-pointer">
+        <Button className="font-medium flex gap-2 py-3 px-2 items-center md:text-lg text-base hover:cursor-pointer">
           <BiMessageAltAdd size={24} />
           <p>Create Task</p>
         </Button>
