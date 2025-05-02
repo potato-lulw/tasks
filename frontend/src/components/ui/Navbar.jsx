@@ -26,7 +26,7 @@ const Navbar = () => {
     dispatch(setOpenSidebar(true));
   }
   return (
-    <div className='md:px-6 px-2 py-2 bg-background border border-border rounded-md flex flex-row justify-between items-center w-full shadow-xl'>
+  <div className='md:px-6 z-20 px-2 py-2 bg-background md:border-2 border  border-border md:border-t-0 rounded-md md:rounded-r-none md:rounded-l-xl flex flex-row justify-between items-center w-full shadow-xl gap-2 navbar relative '>
 
       <MobileSidebar />
 
@@ -37,7 +37,7 @@ const Navbar = () => {
           <Button variant={"outline"} onClick={openSidebar}><LuPanelLeftOpen /> </Button>
           <ModeToggle />
         </div>
-
+    
 
 
         <div className='rounded-full hidden md:flex flex-row gap-2 border border-border items-center justify-between px-2 py-1  bg-secondary'>

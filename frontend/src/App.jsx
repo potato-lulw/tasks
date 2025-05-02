@@ -36,11 +36,13 @@ const Layout = () => {
 
       {/* Main Content */}
       <div className="flex flex-col flex-1 w-full max-h-screen overflow-hidden">
-        <div className="h-4 bg-background hidden md:block" />
+        <div className="h-4 bg-background hidden md:block relative topbar  " />
 
-        <div className="flex-1 overflow-y-auto md:border-2 border-border rounded-tl-2xl p-4 2xl:px-10">
-          <Navbar />
-          <div>
+        <div className="flex-1 overflow-y-auto  md:border-2 border-border rounded-tl-2xl p-4 2xl:px-10">
+          <div className=" md:w-fit md:right-0 z-10  md:fixed w-full top-0">
+            <Navbar />
+          </div>
+          <div className="md:mt-8">
             <Outlet />
           </div>
         </div>
