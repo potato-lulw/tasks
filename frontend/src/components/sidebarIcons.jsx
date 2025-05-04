@@ -19,22 +19,22 @@ import {
     },
     {
       label: "Tasks",
-      link: "/task",
+      link: "/tasks",
       icon: <FiCheckSquare />,
     },
     {
       label: "In Progress",
-      link: "/task/inprogress",
+      link: "/tasks/inprogress",
       icon: <AiOutlineLoading3Quarters />,
     },
     {
       label: "To Do",
-      link: "/task/todo",
+      link: "/tasks/todo",
       icon: <BsListCheck />,
     },
     {
       label: "Completed",
-      link: "/task/completed",
+      link: "/tasks/completed",
       icon: <MdTaskAlt />,
     },
     {

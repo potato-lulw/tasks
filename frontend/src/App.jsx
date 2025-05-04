@@ -8,12 +8,13 @@ import Signup from "./pages/Signup"
 import { Toaster } from "sonner"
 import Trash from "./pages/Trash"
 import Users from "./pages/Users"
-import { useTheme } from "./components/ThemeContextProvider"
+
 import { useSelector } from "react-redux"
 import Sidebar from "./components/ui/Sidebar"
 import { ModeToggle } from "./components/Toggle"
 import Navbar from "./components/ui/Navbar"
 import MiniSidebar from "./components/ui/MiniSidebar"
+
 
 const Layout = () => {
   const { user } = useSelector((state) => state.auth);
@@ -55,7 +56,7 @@ const Layout = () => {
 
 
 function App() {
-  const { theme } = useTheme()
+
   return (
     <main>
       <div className={`flex min-h-screen justify-center items-center custom-svg-background w-full `}>
@@ -64,9 +65,9 @@ function App() {
 
             <Route element={<Navigate to='/dashboard' />} path="/" />
             <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/task" element={<Task />} />
-            <Route path="/task/:status" element={<Task />} />
             <Route path="/task/:id" element={<TaskDetails />} />
+            <Route path="/tasks/:status" element={<Task />} />
+            <Route path="/tasks" element={<Task />} />
             <Route path="/trash" element={<Trash />} />
             <Route path="/team" element={<Users />} />
           </Route>

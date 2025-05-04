@@ -1,5 +1,5 @@
 import { FaListUl, FaNewspaper } from "react-icons/fa";
-import { MdAdminPanelSettings } from "react-icons/md";
+
 
 export const summary = {
     totalTasks: 10,
@@ -1175,4 +1175,5 @@ export const activitiesData = [
         by: "Akwasi Asante",
     },
 ];
+
 
