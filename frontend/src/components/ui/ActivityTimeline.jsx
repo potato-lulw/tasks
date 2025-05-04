@@ -35,32 +35,7 @@ const TASKTYPEICON = {
   ),
 };
 
-const dummyActivities = [
-  {
-    name: 'Codewave Asante',
-    action: 'commented',
-    timestamp: moment().subtract(1, 'hours').toISOString(),
-    message: 'Hello Team',
-  },
-  {
-    name: 'Jane Doe',
-    action: 'started',
-    timestamp: moment().subtract(2, 'hours').toISOString(),
-    message: 'Working on the UI fixes.',
-  },
-  {
-    name: 'John Smith',
-    action: 'completed',
-    timestamp: moment().subtract(1, 'days').toISOString(),
-    message: 'Finished the backend API integration.',
-  },
-  {
-    name: 'Alice Johnson',
-    action: 'assigned',
-    timestamp: moment().subtract(3, 'days').toISOString(),
-    message: 'Assigned the new mobile feature.',
-  },
-];
+
 
 export default function ActivityTimeline({activities}) {
   return (
