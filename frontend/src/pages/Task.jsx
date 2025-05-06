@@ -26,6 +26,13 @@ const Task = () => {
   // const [loading, setLoading] = useState(false);
   const loading = false;
   const [list, setList] = useState(false);
+  const [taskTitle, setTaskTitle] = useState('');
+  const [assignedUser, setAssignedUser] = useState('');
+  const [taskStage, setTaskStage] = useState('');
+  const [taskDate, setTaskDate] = useState(null);
+  const [taskPriority, setTaskPriority] = useState('');
+  const [selectedFile, setSelectedFile] = useState(null);
+
 
   return (
     <div className='h-full  flex flex-col gap-4 my-2'>
@@ -34,9 +41,9 @@ const Task = () => {
 
         <Dialog>
           <DialogTrigger asChild>
-            <div className="font-medium flex gap-2 py-3 px-2 items-center md:text-lg text-base hover:cursor-pointer bg-primary text-secondary rounded-xl">
-              <BiMessageAltAdd size={24} />
-              <span>Create Task</span>
+            <div className="font-medium flex gap-2 p-2 items-center md:text-lg text-base hover:cursor-pointer bg-primary text-secondary rounded-md">
+              <BiMessageAltAdd size={16} />
+              <span className='text-sm'>Create Task</span>
             </div>
           </DialogTrigger>
 
@@ -48,7 +55,21 @@ const Task = () => {
               </DialogDescription>
             </DialogHeader>
 
-            <AddTaskForm users={users} />
+            <AddTaskForm
+              users={users}
+              taskTitle={taskTitle}
+              setTaskTitle={setTaskTitle}
+              assignedUser={assignedUser}
+              setAssignedUser={setAssignedUser}
+              taskStage={taskStage}
+              setTaskStage={setTaskStage}
+              taskDate={taskDate}
+              setTaskDate={setTaskDate}
+              taskPriority={taskPriority}
+              setTaskPriority={setTaskPriority}
+              selectedFile={selectedFile}
+              setSelectedFile={setSelectedFile}
+            />
 
             <DialogFooter>
               <DialogClose asChild>

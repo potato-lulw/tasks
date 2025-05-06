@@ -1,5 +1,5 @@
 import { Button } from '@/components/ui/button'
-import React from 'react'
+import React, { useState } from 'react'
 import { BiMessageAltAdd } from 'react-icons/bi'
 import { users } from '@/assets/data'
 import { formatDate, getInitials } from '@/utils/utils'
@@ -24,15 +24,23 @@ import {
 import AddUserForm from '@/components/ui/AddUserForm'
 
 const Users = () => {
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [title, setTitle] = useState('');
+  const [role, setRole] = useState('');
+  const [isAdmin, setIsAdmin] = useState(false);
+  const [isActive, setIsActive] = useState(false);
+  const [profilePic, setProfilePic] = useState(null);
+
   return (
     <div className='h-full flex flex-col gap-4 my-2 w-full'>
       <div className='flex items-center justify-between py-2'>
         <p className='text-2xl font-medium'>Users</p>
         <Dialog>
           <DialogTrigger asChild>
-            <div className="font-medium flex gap-2 py-3 px-2 items-center md:text-lg text-base hover:cursor-pointer bg-primary text-secondary rounded-xl">
-              <BiMessageAltAdd size={24} />
-              <p className="m-0">Add User</p>
+            <div className="font-medium flex gap-2 p-2 items-center md:text-lg text-base hover:cursor-pointer bg-primary text-secondary rounded-md">
+              <BiMessageAltAdd size={16} />
+              <p className="m-0 text-sm">Add User</p>
             </div>
           </DialogTrigger>
 
@@ -44,7 +52,22 @@ const Users = () => {
               </DialogDescription>
             </DialogHeader>
 
-            <AddUserForm />
+            <AddUserForm
+              name={name}
+              setName={setName}
+              email={email}
+              setEmail={setEmail}
+              title={title}
+              setTitle={setTitle}
+              role={role}
+              setRole={setRole}
+              isAdmin={isAdmin}
+              setIsAdmin={setIsAdmin}
+              isActive={isActive}
+              setIsActive={setIsActive}
+              profilePic={profilePic}
+              setProfilePic={setProfilePic}
+            />
 
             <DialogFooter>
               <DialogClose asChild>

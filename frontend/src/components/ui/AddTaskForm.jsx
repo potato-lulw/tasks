@@ -8,19 +8,32 @@ import {
 } from "@/components/ui/select"
 import { DatePicker } from './DatePicker'
 import { Input } from './input'
-import { Button } from './button'
 
-const AddTaskForm = ({ users }) => {
+
+const AddTaskForm = ({
+    users,
+    taskTitle,
+    setTaskTitle,
+    assignedUser,
+    setAssignedUser,
+    taskStage,
+    setTaskStage,
+    taskDate,
+    setTaskDate,
+    taskPriority,
+    setTaskPriority,
+    selectedFile,
+    setSelectedFile,
+}) => {
     return (
         <div className='flex flex-col gap-4'>
-
             {/* Task Title */}
             <div>
                 <p className="mb-1">Task Title</p>
                 <Input
                     type="text"
-                    name="taskTitle"
-                    id="taskTitle"
+                    value={taskTitle}
+                    onChange={(e) => setTaskTitle(e.target.value)}
                     placeholder="Enter task title"
                     className="w-full"
                 />
@@ -29,7 +42,7 @@ const AddTaskForm = ({ users }) => {
             {/* Assign Task to */}
             <div>
                 <p className="mb-1">Assign Task to</p>
-                <Select>
+                <Select onValueChange={setAssignedUser}>
                     <SelectTrigger className="w-full border-2">
                         <SelectValue placeholder={users[0]?.name || "Select user"} />
                     </SelectTrigger>
@@ -47,7 +60,7 @@ const AddTaskForm = ({ users }) => {
             <div className='flex items-center gap-2'>
                 <div className='w-full'>
                     <p className="mb-1">Task Stage</p>
-                    <Select>
+                    <Select onValueChange={setTaskStage}>
                         <SelectTrigger className="w-full border-2">
                             <SelectValue placeholder="To Do" />
                         </SelectTrigger>
@@ -61,7 +74,7 @@ const AddTaskForm = ({ users }) => {
 
                 <div className='w-full'>
                     <p className="mb-1">Task Date</p>
-                    <DatePicker />
+                    <DatePicker date={taskDate} setDate={setTaskDate} />
                 </div>
             </div>
 
@@ -69,7 +82,7 @@ const AddTaskForm = ({ users }) => {
             <div className='flex items-center gap-2'>
                 <div className='w-full'>
                     <p className="mb-1">Task Priority</p>
-                    <Select>
+                    <Select onValueChange={setTaskPriority}>
                         <SelectTrigger className="w-full border-2">
                             <SelectValue placeholder="Select priority" />
                         </SelectTrigger>
@@ -83,14 +96,17 @@ const AddTaskForm = ({ users }) => {
 
                 <div className='w-full'>
                     <p className="mb-1">Select Assets</p>
-                    <Input type="file" />
+                    <Input
+                        type="file"
+                        onChange={(e) => setSelectedFile(e.target.files[0])}
+                    />
                 </div>
             </div>
 
             {/* Submit Button */}
             
         </div>
-    )
-}
+    );
+};
 
 export default AddTaskForm
