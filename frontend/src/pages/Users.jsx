@@ -1,7 +1,7 @@
 import { Button } from '@/components/ui/button'
 import React from 'react'
 import { BiMessageAltAdd } from 'react-icons/bi'
-import { user } from '@/assets/data'
+import { users } from '@/assets/data'
 import { formatDate, getInitials } from '@/utils/utils'
 import {
   Table,
@@ -11,16 +11,53 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog"
+import AddUserForm from '@/components/ui/AddUserForm'
 
 const Users = () => {
   return (
     <div className='h-full flex flex-col gap-4 my-2 w-full'>
       <div className='flex items-center justify-between py-2'>
         <p className='text-2xl font-medium'>Users</p>
-        <Button className="font-medium flex gap-2 py-3 px-2 items-center md:text-lg text-base hover:cursor-pointer">
-          <BiMessageAltAdd size={24} />
-          <p>Add User</p>
-        </Button>
+        <Dialog>
+          <DialogTrigger asChild>
+            <div className="font-medium flex gap-2 py-3 px-2 items-center md:text-lg text-base hover:cursor-pointer bg-primary text-secondary rounded-xl">
+              <BiMessageAltAdd size={24} />
+              <p className="m-0">Add User</p>
+            </div>
+          </DialogTrigger>
+
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Add User</DialogTitle>
+              <DialogDescription>
+                Fill in the details of the new user.
+              </DialogDescription>
+            </DialogHeader>
+
+            <AddUserForm />
+
+            <DialogFooter>
+              <DialogClose asChild>
+                <div className='w-full flex items-center gap-2 overflow-auto justify-end'>
+                  <Button variant="outline">Cancel</Button>
+                  <Button type="submit">Add</Button>
+                </div>
+              </DialogClose>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+
+
       </div>
 
       <div className='p-2 md:p-4 bg-background rounded-xl  w-full'>
@@ -37,45 +74,50 @@ const Users = () => {
             </TableRow>
           </TableHeader>
           <TableBody>
-            <TableRow key={user._id}>
-              <TableCell>
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-full bg-indigo-600 text-white flex items-center justify-center text-sm font-medium">
-                    {getInitials(user.name)}
-                  </div>
-                  <div className="flex flex-col">
-                    <span className="font-medium">{user.name}</span>
-                  </div>
-                </div>
-              </TableCell>
+            {
+              users.map(user => (
+                <TableRow key={user._id}>
+                  <TableCell>
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 rounded-full bg-indigo-600 text-white flex items-center justify-center text-sm font-medium">
+                        {getInitials(user.name)}
+                      </div>
+                      <div className="flex flex-col">
+                        <span className="font-medium">{user.name}</span>
+                      </div>
+                    </div>
+                  </TableCell>
 
-              <TableCell>{user.title}</TableCell>
-              <TableCell>{user.role}</TableCell>
-              <TableCell>{user.email}</TableCell>
-              <TableCell>
-                <span
-                  className={`px-2 py-1 text-xs rounded-md ${user.isAdmin
-                      ? "bg-blue-100 text-blue-800"
-                      : "bg-gray-100 text-gray-800"
-                    }`}
-                >
-                  {user.isAdmin ? "Yes" : "No"}
-                </span>
-              </TableCell>
+                  <TableCell>{user.title}</TableCell>
+                  <TableCell>{user.role}</TableCell>
+                  <TableCell>{user.email}</TableCell>
+                  <TableCell>
+                    <span
+                      className={`px-2 py-1 text-xs rounded-md ${user.isAdmin
+                        ? "bg-blue-100 text-blue-800"
+                        : "bg-gray-100 text-gray-800"
+                        }`}
+                    >
+                      {user.isAdmin ? "Yes" : "No"}
+                    </span>
+                  </TableCell>
 
-              <TableCell>
-                <span
-                  className={`px-2 py-1 text-xs rounded-md ${user.isActive
-                      ? "bg-green-100 text-green-800"
-                      : "bg-red-100 text-red-800"
-                    }`}
-                >
-                  {user.isActive ? "Active" : "Inactive"}
-                </span>
-              </TableCell>
+                  <TableCell>
+                    <span
+                      className={`px-2 py-1 text-xs rounded-md ${user.isActive
+                        ? "bg-green-100 text-green-800"
+                        : "bg-red-100 text-red-800"
+                        }`}
+                    >
+                      {user.isActive ? "Active" : "Inactive"}
+                    </span>
+                  </TableCell>
 
-              <TableCell>{formatDate(new Date(user.createdAt))}</TableCell>
-            </TableRow>
+                  <TableCell>{formatDate(new Date(user.createdAt))}</TableCell>
+                </TableRow>
+              ))
+            }
+
           </TableBody>
         </Table>
       </div>

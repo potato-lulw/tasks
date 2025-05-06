@@ -9,19 +9,57 @@ import { tasks } from '@/assets/data';
 import TaskDetailsCard from '@/components/ui/TaskDetailsCard';
 import TaskDetailsCardSkeleton from '@/components/ui/TaskDetailsCardSkeleton';
 import TaskDetailsList from '@/components/ui/TaskDetailsList';
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog"
+import AddTaskForm from '@/components/ui/AddTaskForm';
+import { users } from '@/assets/data'
 
 const Task = () => {
-  const [loading, setLoading] = useState(false);
+  // const [loading, setLoading] = useState(false);
+  const loading = false;
   const [list, setList] = useState(false);
 
   return (
     <div className='h-full  flex flex-col gap-4 my-2'>
       <div className='flex items-center justify-between py-2'>
         <p className='text-2xl font-medium'>Tasks</p>
-        <Button className="font-medium flex gap-2 py-3 px-2 items-center md:text-lg text-base hover:cursor-pointer">
-          <BiMessageAltAdd size={24} />
-          <p>Create Task</p>
-        </Button>
+
+        <Dialog>
+          <DialogTrigger asChild>
+            <div className="font-medium flex gap-2 py-3 px-2 items-center md:text-lg text-base hover:cursor-pointer bg-primary text-secondary rounded-xl">
+              <BiMessageAltAdd size={24} />
+              <span>Create Task</span>
+            </div>
+          </DialogTrigger>
+
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Add Task</DialogTitle>
+              <DialogDescription>
+                Fill in the details below to create a task.
+              </DialogDescription>
+            </DialogHeader>
+
+            <AddTaskForm users={users} />
+
+            <DialogFooter>
+              <DialogClose asChild>
+                <div className='w-full flex items-center gap-2 overflow-auto justify-end'>
+                  <Button variant="outline">Cancel</Button>
+                  <Button type="submit">Submit</Button>
+                </div>
+              </DialogClose>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
 
       </div>
       <div className='flex gap-4 items-center'>
@@ -59,14 +97,14 @@ const Task = () => {
       {
         loading ? (
           <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4'>
-            {[1,2,3,4,5].map((_, i) => (
+            {[1, 2, 3, 4, 5].map((_, i) => (
               <TaskDetailsCardSkeleton key={i} />
             ))}
           </div>
         )
           :
           (
-            list ? <TaskDetailsList tasks={tasks}/> : (<div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4'>
+            list ? <TaskDetailsList tasks={tasks} /> : (<div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4'>
               {
                 tasks.map((task) => {
                   return (
