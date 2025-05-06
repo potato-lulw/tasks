@@ -39,6 +39,7 @@ const AddTaskForm = ({
                 />
             </div>
 
+
             {/* Assign Task to */}
             <div>
                 <p className="mb-1">Assign Task to</p>
@@ -60,14 +61,14 @@ const AddTaskForm = ({
             <div className='flex items-center gap-2'>
                 <div className='w-full'>
                     <p className="mb-1">Task Stage</p>
-                    <Select onValueChange={setTaskStage}>
+                    <Select value={taskStage} onValueChange={setTaskStage}>
                         <SelectTrigger className="w-full border-2">
-                            <SelectValue placeholder="To Do" />
+                            <SelectValue placeholder={taskStage != "" ? taskStage : "Select stage"} />
                         </SelectTrigger>
                         <SelectContent>
-                            <SelectItem value="To Do">To Do</SelectItem>
+                            <SelectItem value="Todo">Todo</SelectItem>
                             <SelectItem value="In Progress">In Progress</SelectItem>
-                            <SelectItem value="Done">Done</SelectItem>
+                            <SelectItem value="Completed">Completed</SelectItem>
                         </SelectContent>
                     </Select>
                 </div>
@@ -104,7 +105,7 @@ const AddTaskForm = ({
             </div>
 
             {/* Submit Button */}
-            
+
         </div>
     );
 };
