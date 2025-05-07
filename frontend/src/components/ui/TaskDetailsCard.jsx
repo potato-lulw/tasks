@@ -78,10 +78,7 @@ const TaskDetailsCard = ({ task }) => {
                             </DropdownMenuItem>
 
 
-                            {/* <DropdownMenuItem className="flex items-center gap-2 hover:bg-gray-100 cursor-pointer">
-                                <FaEdit />
-                                Edit
-                            </DropdownMenuItem> */}
+                            
 
                             <CustomDialog
                                 title="Edit Task"
