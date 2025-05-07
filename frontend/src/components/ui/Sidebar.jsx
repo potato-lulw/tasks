@@ -16,9 +16,11 @@ const Sidebar = () => {
     const location = useLocation();
 
     const path = location.pathname.split('/')[1];
-    const sidebarLinks = user?.isAdmin
+    const sidebarLinks = !user?.isAdmin
         ? sideBarIcons
         : sideBarIcons.filter(item => item.label !== "Users" && item.label !== "Trash");
+
+    
 
     const closeSidebar = () => {
         dispatch(setOpenSidebar(false));

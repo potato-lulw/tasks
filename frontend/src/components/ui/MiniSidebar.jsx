@@ -13,7 +13,7 @@ const MiniSidebar = () => {
     const dispatch = useDispatch();
     const location = useLocation();
   
-    const sidebarLinks = user?.isAdmin
+    const sidebarLinks = !user?.isAdmin
       ? sideBarIcons
       : sideBarIcons.filter(item => item.label !== "Users" && item.label !== "Trash");
   
