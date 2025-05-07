@@ -3,7 +3,7 @@ import { MdKeyboardArrowDown, MdKeyboardArrowUp, MdKeyboardDoubleArrowUp } from 
 import { BsThreeDots } from "react-icons/bs";
 import { formatDate, TASK_TYPE } from '@/utils/utils';
 import { Button } from './button';
-import { FaRegCommentDots } from 'react-icons/fa';
+import { FaRegCommentDots, FaTrash } from 'react-icons/fa';
 import { HiPaperClip } from 'react-icons/hi';
 import { MdChecklist } from 'react-icons/md';
 import { BiPlus } from 'react-icons/bi';
@@ -31,12 +31,30 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { FaFolderOpen, FaEdit, FaPlus, FaClone } from "react-icons/fa";
+import { useNavigate } from 'react-router-dom';
+import AddTaskForm from './AddTaskForm';
+import { users } from '@/assets/data';
 
 const TaskDetailsCard = ({ task }) => {
-    const [taskTitle, setTaskTitle] = useState("");
-    const [taskDate, setTaskDate] = useState("");
-    const [taskTag, setTaskTag] = useState("");
+    const [subTaskTitle, setSubTaskTitle] = useState("");
+    const [subTaskDate, setSubTaskDate] = useState("");
+    const [subTaskTag, setSubTaskTag] = useState("");
     const handleSubtaskSubmit = async () => { }
+    const navigate = useNavigate();
+    const [taskTitle, setTaskTitle] = useState(task.title);
+    const [assignedUser, setAssignedUser] = useState(task.assignedUser);
+    const [taskStage, setTaskStage] = useState(task.stage);
+    const [taskDate, setTaskDate] = useState(task.date);
+    const [taskPriority, setTaskPriority] = useState(task.priority);
+    const [selectedFile, setSelectedFile] = useState(null);
+    const handleEditSubmit = (updated) => {
+        // call your API / context / parent callback
+        console.log('saving edits for', task._id, updated);
+    };
+    const handleDelete = () => {
+        // call your API / context / parent callback
+        console.log('deleting task', task._id);
+    };
     return (
         <div className='bg-background rounded-xl flex flex-col items-start justify-between gap-2 p-3 border border-border'>
 
@@ -54,43 +72,91 @@ const TaskDetailsCard = ({ task }) => {
                         <DropdownMenuContent className="w-52">
                             <DropdownMenuLabel>Task Actions</DropdownMenuLabel>
                             <DropdownMenuSeparator />
-                            <DropdownMenuItem className="flex items-center gap-2 hover:bg-blue-100 hover:text-blue-600 cursor-pointer">
+                            <DropdownMenuItem className="flex items-center gap-2 hover:bg-blue-100 hover:text-blue-600 cursor-pointer" onClick={() => navigate(`/task/${task._id}`)}>
                                 <FaFolderOpen />
                                 Open Task
                             </DropdownMenuItem>
-                            <DropdownMenuItem className="flex items-center gap-2 hover:bg-gray-100 cursor-pointer">
+
+
+                            {/* <DropdownMenuItem className="flex items-center gap-2 hover:bg-gray-100 cursor-pointer">
                                 <FaEdit />
                                 Edit
-                            </DropdownMenuItem>
+                            </DropdownMenuItem> */}
+
+                            <CustomDialog
+                                title="Edit Task"
+                                description="Change the fields below and save."
+                                submitLabel="Save"
+                                onSubmit={() => handleEditSubmit({
+                                    id: task._id,
+                                    title: taskTitle,
+                                    assigned: assignedUser,
+                                    stage: taskStage,
+                                    date: taskDate,
+                                    priority: taskPriority,
+                                })}
+                                triggerLabel={
+                                    <DropdownMenuItem className="flex items-center gap-2 hover:bg-gray-100 cursor-pointer">
+                                        <FaEdit />
+                                        Edit
+                                    </DropdownMenuItem>
+                                }
+                                triggerIcon={null}
+                                customCss=""
+                            >
+                                {/* inside the dialog render your form, wired up to local state */}
+                                <AddTaskForm
+                                    users={users}
+                                    taskTitle={taskTitle} setTaskTitle={setTaskTitle}
+                                    assignedUser={assignedUser} setAssignedUser={setAssignedUser}
+                                    taskStage={taskStage} setTaskStage={setTaskStage}
+                                    taskDate={taskDate} setTaskDate={setTaskDate}
+                                    taskPriority={taskPriority} setTaskPriority={setTaskPriority}
+                                    selectedFile={selectedFile} setSelectedFile={setSelectedFile}
+                                />
+                            </CustomDialog>
 
                             <CustomDialog
                                 title="Add Subtask"
                                 description="Fill in the details of the new subtask."
                                 triggerLabel={
                                     <div className="flex items-center gap-2">
-                                        
+
                                         Add Sub-Task
                                     </div>
                                 }
                                 onSubmit={handleSubtaskSubmit}
                                 submitLabel="Add"
-                                triggerIcon={<FaPlus className='text-muted-foreground'/>}
+                                triggerIcon={<FaPlus className='text-muted-foreground' />}
                                 customCss="text-primary p-2 hover:bg-secondary"
                             >
                                 <AddSubtaskForm
-                                    taskTitle={taskTitle}
-                                    setTaskTitle={setTaskTitle}
-                                    taskDate={taskDate}
-                                    setTaskDate={setTaskDate}
-                                    taskTag={taskTag}
-                                    setTaskTag={setTaskTag}
+                                    taskTitle={subTaskTitle}
+                                    setTaskTitle={setSubTaskTitle}
+                                    taskDate={subTaskDate}
+                                    setTaskDate={setSubTaskDate}
+                                    taskTag={subTaskTag}
+                                    setTaskTag={setSubTaskTag}
                                 />
                             </CustomDialog>
 
-                            <DropdownMenuItem className="flex items-center gap-2 hover:bg-gray-100 cursor-pointer">
-                                <FaClone />
-                                Duplicate
-                            </DropdownMenuItem>
+                            <CustomDialog
+                                title='Delete Task'
+                                triggerLabel={
+                                    <div className="flex items-center gap-2 cursor-pointer">
+
+                                        Delete
+                                    </div>
+                                }
+                                triggerIcon={<FaTrash />}
+                                onSubmit={() => handleDelete(task._id)}
+                                description='Are you sure you want to delete this task?'
+                                customCss="text-red-500 p-2 hover:bg-secondary"
+                                submitLabel='Delete'
+                            >
+
+                            </CustomDialog>
+
                         </DropdownMenuContent>
                     </DropdownMenu>
 
@@ -149,7 +215,14 @@ const TaskDetailsCard = ({ task }) => {
                 submitLabel='Add'
                 customCss='bg-secondary text-primary p-2'
             >
-                <AddSubtaskForm taskTitle={taskTitle} setTaskTitle={setTaskTitle} taskDate={taskDate} setTaskDate={setTaskDate} taskTag={taskTag} setTaskTag={setTaskTag} />
+                <AddSubtaskForm
+                    taskTitle={subTaskTitle}
+                    setTaskTitle={setSubTaskTitle}
+                    taskDate={subTaskDate}
+                    setTaskDate={setSubTaskDate}
+                    taskTag={subTaskTag}
+                    setTaskTag={setSubTaskTag}
+                />
             </CustomDialog>
 
 

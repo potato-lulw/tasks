@@ -31,7 +31,7 @@ const CustomDialog = ({
                     className={`font-medium flex gap-2  items-center md:text-lg text-base hover:cursor-pointer rounded-md ${customCss}`}
                 >
                     {triggerIcon}
-                    <p className="m-0 text-sm w-full">{triggerLabel}</p>
+                    <div className="m-0 text-sm w-full">{triggerLabel}</div>
                 </div>
             </DialogTrigger>
 
