@@ -24,7 +24,10 @@ const AddTaskForm = ({
     setTaskPriority,
     selectedFile,
     setSelectedFile,
-}) => {
+    }) => {
+
+
+    console.log(taskTitle, assignedUser, taskStage, taskDate, taskPriority, selectedFile)
     return (
         <div className='flex flex-col gap-4'>
             {/* Task Title */}
@@ -83,14 +86,14 @@ const AddTaskForm = ({
             <div className='flex items-center gap-2'>
                 <div className='w-full'>
                     <p className="mb-1">Task Priority</p>
-                    <Select onValueChange={setTaskPriority}>
+                    <Select value={taskPriority}  onValueChange={setTaskPriority}>
                         <SelectTrigger className="w-full border-2">
                             <SelectValue placeholder="Select priority" />
                         </SelectTrigger>
                         <SelectContent>
-                            <SelectItem value="High">High</SelectItem>
-                            <SelectItem value="Medium">Medium</SelectItem>
-                            <SelectItem value="Low">Low</SelectItem>
+                            <SelectItem value="high">High</SelectItem>
+                            <SelectItem value="medium">Medium</SelectItem>
+                            <SelectItem value="low">Low</SelectItem>
                         </SelectContent>
                     </Select>
                 </div>
