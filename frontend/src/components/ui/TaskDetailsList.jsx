@@ -1,5 +1,5 @@
 import { formatDate, TASK_TYPE } from '@/utils/utils'
-import React from 'react'
+import React, { useState } from 'react'
 import { MdChecklist, MdKeyboardArrowDown, MdKeyboardArrowUp, MdKeyboardDoubleArrowUp } from 'react-icons/md'
 import {
     Table,
@@ -14,15 +14,35 @@ import UserInfo from './UserInfo'
 import { FaRegCommentDots } from 'react-icons/fa'
 import { HiPaperClip } from 'react-icons/hi'
 import Assets from './Assets'
+import { users } from '@/assets/data'
+import CustomDialog from './CustomDialog'
+import AddTaskForm from './AddTaskForm'
 
 const TaskDetailsList = ({ tasks }) => {
+
+
+    const [taskTitle, setTaskTitle] = useState('');
+    const [assignedUser, setAssignedUser] = useState('');
+    const [taskStage, setTaskStage] = useState('');
+    const [taskDate, setTaskDate] = useState('');
+    const [taskPriority, setTaskPriority] = useState('');
+    const [selectedFile, setSelectedFile] = useState(null);
     const icons = {
         high: <MdKeyboardDoubleArrowUp size={24} />,
         medium: <MdKeyboardArrowUp size={24} />,
         low: <MdKeyboardArrowDown size={24} />
     }
+    const handleEditSubmit = (updated) => {
+        // call your API / context / parent callback
+        console.log('saving edits for', updated);
+    };
+    const handleDelete = () => {
+        // call your API / context / parent callback
+        console.log('deleting task');
+    };
 
-    
+
+
     return (
         <Table className={`bg-background rounded-xl text-xs`}>
 
@@ -76,7 +96,56 @@ const TaskDetailsList = ({ tasks }) => {
 
 
                         <TableCell className="align-middle text-right">
-                            <div className='flex flex-col gap-2'><p className='text-blue-500'>Edit</p><p className='text-destructive'>Delete</p></div>
+                            <div className='flex flex-col gap-2'>
+                                <CustomDialog
+                                    title="Edit Task"
+                                    description="Change the fields below and save."
+                                    submitLabel="Save"
+                                    onSubmit={() => handleEditSubmit({
+                                        id: task._id,
+                                        title: taskTitle,
+                                        assigned: assignedUser,
+                                        stage: taskStage,
+                                        date: taskDate,
+                                        priority: taskPriority,
+                                    })}
+                                    triggerLabel={
+
+                                        <p onClick={() => {
+                                            setTaskTitle(task.title);
+                                            setAssignedUser(task.assignedUser);
+                                            setTaskStage(task.stage);
+                                            setTaskDate(task.date);
+                                            setTaskPriority(task.priority);
+                                        }}>Edit</p>
+
+                                    }
+                                    triggerIcon={null}
+                                    customCss="hover:cursor-pointer text-blue-500 self-end"
+
+                                >
+                                    {/* inside the dialog render your form, wired up to local state */}
+                                    <AddTaskForm
+                                        users={users}
+                                        taskTitle={taskTitle} setTaskTitle={setTaskTitle}
+                                        assignedUser={assignedUser} setAssignedUser={setAssignedUser}
+                                        taskStage={taskStage} setTaskStage={setTaskStage}
+                                        taskDate={taskDate} setTaskDate={setTaskDate}
+                                        taskPriority={taskPriority} setTaskPriority={setTaskPriority}
+                                        selectedFile={selectedFile} setSelectedFile={setSelectedFile}
+                                    />
+                                </CustomDialog>
+                                <CustomDialog
+                                    title="Delete Task"
+                                    description="Are you sure you want to delete this task?"
+                                    submitLabel="Delete"
+                                    onSubmit={handleDelete}
+                                    triggerLabel='Delete'
+                                    triggerIcon={null}
+                                    customCss="hover:cursor-pointer text-destructive self-end"
+                                />
+
+                            </div>
                         </TableCell>
                     </TableRow>
 

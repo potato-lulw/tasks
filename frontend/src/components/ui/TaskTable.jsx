@@ -14,6 +14,7 @@ import { TASK_TYPE } from "@/utils/utils"
 import UserInfo from "./UserInfo"
 import { FiDelete } from "react-icons/fi"
 import { BiRecycle, BiTrash } from "react-icons/bi"
+import CustomDialog from "./CustomDialog"
 const TaskTable = ({ tasks, isTrash = false }) => {
 
 
@@ -23,6 +24,9 @@ const TaskTable = ({ tasks, isTrash = false }) => {
         low: <MdKeyboardArrowDown size={24} />
     }
 
+    const handleRestoreButton = (_id) => {
+        console.log('restoring task', _id)
+    }
 
     return (
         <Table className={`bg-background rounded-xl text-xs`}>
@@ -80,8 +84,26 @@ const TaskTable = ({ tasks, isTrash = false }) => {
 
                         {isTrash && <TableCell className=" text-right">
                             <div className="flex gap-2 text-right justify-end">
-                                <button className="text-green-500"><BiRecycle size={20}/></button>
-                                <button className="text-destructive"><BiTrash size={20}/></button>
+                                <CustomDialog
+                                    title='Restore this task?'
+                                    triggerLabel=""
+                                    triggerIcon={<BiRecycle size={20} className="text-green-500"/>}
+                                    onSubmit={handleRestoreButton}
+                                    description='Are you sure you want to restore this task?'
+                                    submitLabel='Restore'
+                                    customCss=''
+                                />
+                                
+
+                                <CustomDialog 
+                                    title='Delete this task?' 
+                                    triggerLabel="" 
+                                    triggerIcon={<BiTrash size={20} 
+                                    className="text-destructive" />} 
+                                    description='Are you sure you want to delete this task?' 
+                                    submitLabel='Delete' 
+                                    customCss=''  />
+                                
                             </div>
                         </TableCell>}
                     </TableRow>
