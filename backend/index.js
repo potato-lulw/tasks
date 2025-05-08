@@ -5,7 +5,7 @@ import cookieParser from 'cookie-parser';
 import morgan from 'morgan';
 import dbConnect from './utils/index.js';
 import { errorHandler, routeNotFound } from './middlewares/errorMiddlewares.js';
-
+import routes from './routes/index.js';
 
 dotenv.config();
 
@@ -27,7 +27,7 @@ app.use(
 )
 
 
-// app.use('/api', routes)
+app.use('/api', routes)
 
 app.use(routeNotFound);
 app.use(errorHandler);
