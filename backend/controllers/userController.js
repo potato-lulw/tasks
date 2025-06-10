@@ -92,6 +92,9 @@ export const getTeamList = async (req, res) => {
 export const getNotificationsList = async (req, res) => {
     try {
         const { userID } = req.user;
+        if(!userID) {
+            return res.status(401).json({ message: 'Unauthorized - User ID not found' });
+        }
         const notifications = await Notification.find({
             team: userID,
             isRead: {$nin: [userID]}
@@ -108,7 +111,9 @@ export const getNotificationsList = async (req, res) => {
 export const updateUserProfile = async (req, res) => {
     try {
         const { userID, isAdmin } = req.user;
+        console.log('User ID:', userID, 'Is Admin:', isAdmin);
         const { _id } = req.body;
+        console.log('Request Body ID:', _id);
         const id = isAdmin ? _id : userID;
         const user = await User.findById(id);
         if (!user) {

@@ -14,7 +14,7 @@ const UserInfo = ({ name, title, email, index }) => {
         <Popover >
             <PopoverTrigger>
                 <div
-                    className={`w-8 h-8 rounded-full text-white flex items-center justify-center text-sm bg-[${colorClass}]`}
+                    className={`w-6 h-6 rounded-full text-white flex items-center justify-center text-xs bg-[${colorClass}]`}
                     title={title}
                 >
 
