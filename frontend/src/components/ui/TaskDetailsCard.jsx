@@ -167,8 +167,8 @@ const TaskDetailsCard = ({ task }) => {
                 </div>
             </div>
 
-            <div className='w-full'>
-                <div className="flex justify-between items-center pt-1 w-full">
+            <div className='w-full mt-2'>
+                <div className="flex justify-between items-center p-2 w-full">
                     {/* Icons and counts */}
                     <Assets task={task} />
 

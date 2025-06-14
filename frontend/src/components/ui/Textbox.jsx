@@ -11,7 +11,7 @@
         classNames = '',
     }) => {
         return (
-            <div className="w-full my-8">
+            <div className="w-full my-2">
 
                 <div className='border border-border rounded-full relative mt-5 wave-particles'>
                     {label && (

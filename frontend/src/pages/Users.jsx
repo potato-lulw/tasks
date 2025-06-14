@@ -1,5 +1,5 @@
 import { Button } from '@/components/ui/button'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { BiMessageAltAdd } from 'react-icons/bi'
 import { users } from '@/assets/data'
 import { formatDate, getInitials } from '@/utils/utils'
@@ -23,18 +23,38 @@ import {
 } from "@/components/ui/dialog"
 import AddUserForm from '@/components/ui/AddUserForm'
 import CustomDialog from '@/components/ui/CustomDialog'
+import { useRegisterMutation } from '@/redux/slices/api/authApiSlice'
+import { toast } from 'sonner'
+import { useForm, FormProvider } from "react-hook-form";
+import { useGetTeamQuery} from '@/redux/slices/api/userApiSlice'
 
 const Users = () => {
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [title, setTitle] = useState('');
-  const [role, setRole] = useState('');
-  const [isAdmin, setIsAdmin] = useState(false);
-  const [isActive, setIsActive] = useState(false);
-  const [profilePic, setProfilePic] = useState(null);
+  
+  const [registerUser] = useRegisterMutation();
+  const methods = useForm();
+  const [userList, setUserList] = useState(users);
+  const { data, isLoading: isFetching, error } = useGetTeamQuery();
 
-  const onSubmit = async () => {
+  useEffect(() => {
+    setUserList(data || []);
+  }, [data])
+ 
+  const onSubmit = async (data) => {
+    try {
 
+      
+        console.log('Form Submitted: ' + data);
+        console.log(data)
+        const result = await registerUser({...data, password: data.email}).unwrap();
+        console.log("User registered successfully:", result);
+        toast.success("User registered successfully!");
+        methods.reset(); // Reset the form after successful submission
+      
+    } catch (error) {
+      console.error("Error registering user:", error);
+      toast.error("Failed to register user: " + (error.data?.message || error.message));
+      return;
+    }
   }
 
   return (
@@ -42,32 +62,20 @@ const Users = () => {
       <div className='flex items-center justify-between py-2'>
         <p className='text-2xl font-medium'>Users</p>
 
-        <CustomDialog
-          triggerLabel={"Add User"}
-          triggerIcon={<BiMessageAltAdd />} // No default icon
-          title="Add User"
-          description="Fill in the details of the new user."
-          onSubmit={onSubmit}
-          submitLabel="Add"
-          customCss='bg-primary text-secondary p-2'
-        >
-          <AddUserForm
-            name={name}
-            setName={setName}
-            email={email}
-            setEmail={setEmail}
-            title={title}
-            setTitle={setTitle}
-            role={role}
-            setRole={setRole}
-            isAdmin={isAdmin}
-            setIsAdmin={setIsAdmin}
-            isActive={isActive}
-            setIsActive={setIsActive}
-            profilePic={profilePic}
-            setProfilePic={setProfilePic}
-          />
-        </CustomDialog>
+        <FormProvider {...methods}>
+          <CustomDialog
+            triggerLabel={"Add User"}
+            triggerIcon={<BiMessageAltAdd />}
+            title="Add User"
+            description="Fill in the details of the new user."
+            onSubmit={methods.handleSubmit(onSubmit)}
+            submitLabel="Add"
+            customCss='bg-primary text-secondary p-2'
+          >
+            <AddUserForm />
+          </CustomDialog>
+          {/* ... rest of the Users UI */}
+        </FormProvider>
 
 
       </div>
@@ -87,7 +95,7 @@ const Users = () => {
           </TableHeader>
           <TableBody>
             {
-              users.map(user => (
+              !isFetching && userList ? userList.map(user => (
                 <TableRow key={user._id}>
                   <TableCell>
                     <div className="flex items-center gap-3">
@@ -127,7 +135,14 @@ const Users = () => {
 
                   <TableCell>{formatDate(new Date(user.createdAt))}</TableCell>
                 </TableRow>
-              ))
+              )) 
+              : (
+                <TableRow>
+                  <TableCell colSpan="7" className="text-center">
+                    {isFetching ? "Loading..." : "No users found."}
+                  </TableCell>
+                </TableRow>
+              )
             }
 
           </TableBody>

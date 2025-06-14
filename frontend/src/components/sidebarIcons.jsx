@@ -47,11 +47,7 @@ import {
       link: "/trash",
       icon: <FiTrash2 />,
     },
-    {
-      label: "Logout",
-      link: "/logout",
-      icon: <BiLogOut />,
-    },
+    
   ];
   
   export default sideBarIcons;

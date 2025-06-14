@@ -13,18 +13,31 @@ import {
 import { CiUser } from "react-icons/ci";
 import { Button } from './button';
 import { useTheme } from '../ThemeContextProvider';
+import { toast } from 'sonner';
+import { logout } from '@/redux/slices/authSlice';
+import { useLogoutMutation } from '@/redux/slices/api/authApiSlice';
 
 const UserAvatar = () => {
-    const [isOpen, setIsOpen] = useState(false);
-    const [openPassword, setOpenPassword] = useState(false);
-    const { user } = useSelector((state) => state.auth);
+
+    // const { user } = useSelector((state) => state.auth);
     const { theme }= useTheme();
     const dispatch = useDispatch();
-    const navigate = useNavigate();
+    // const navigate = useNavigate();
+    const [logoutUser] = useLogoutMutation();
 
-    const logOut = () => {
+    const logOut = async () => {
         // dispatch(logOut());
         console.log("logout");
+        try {
+            const result = await logoutUser().unwrap();
+            console.log("Logout result:", result);
+            dispatch(logout());
+            toast.success("Logout successful!");
+        } catch (error) {
+            console.error("Logout error:", error);
+            toast.error("Logout failed: " + (error.data?.message || error.message));
+            
+        }
     }
     return (
         <div>

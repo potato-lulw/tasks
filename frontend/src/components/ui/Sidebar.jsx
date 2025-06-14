@@ -4,19 +4,22 @@ import sideBarIcons from '../sidebarIcons';
 import { NavLink, useLocation } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { SidebarIcon } from 'lucide-react';
-import { setOpenSidebar } from '@/redux/slices/authSlice';
+import { logout, setOpenSidebar } from '@/redux/slices/authSlice';
 import { LuPanelLeftClose } from "react-icons/lu";
 import { Button } from './button';
 import { PiHandWaving } from "react-icons/pi";
 import { clsx } from 'clsx';
+import { BiLogOut } from 'react-icons/bi';
+import { toast } from 'sonner';
+import { useLogoutMutation } from '@/redux/slices/api/authApiSlice';
 
 const Sidebar = () => {
     const { user } = useSelector((state) => state.auth);
     const dispatch = useDispatch();
     const location = useLocation();
-
-    const path = location.pathname.split('/')[1];
-    const sidebarLinks = !user?.isAdmin
+    const [logoutUser] = useLogoutMutation();
+    // const path = location.pathname.split('/')[1];
+    const sidebarLinks = user?.isAdmin
         ? sideBarIcons
         : sideBarIcons.filter(item => item.label !== "Users" && item.label !== "Trash");
 
@@ -26,6 +29,18 @@ const Sidebar = () => {
         dispatch(setOpenSidebar(false));
     }
 
+    const handleLogOut = async () => {
+        try {
+            const result = await logoutUser().unwrap();
+            console.log("Logout result:", result);
+            dispatch(logout());
+            toast.success("Logout successful!");
+        } catch (error) {
+            console.error("Logout error:", error);
+            toast.error("Logout failed: " + (error.data?.message || error.message));
+            return;
+        }
+    }
 
     return (
         <div className='p-6 px-3 h-full flex flex-col justify-between items-start'>
@@ -48,6 +63,13 @@ const Sidebar = () => {
                     <span>{label}</span>
                   </NavLink>
                 ))}
+                <NavLink
+                    onClick={handleLogOut}
+                    className="flex items-center hover:bg-accent gap-2 p-2 rounded-md w-full"
+                >
+                    <BiLogOut/>
+                    <span>Logout</span>
+                </NavLink>
 
             </div>
             <div className='flex gap-2 justify-center items-center bg-accent p-2 rounded-md border-border border'>

@@ -7,19 +7,18 @@ import { setCredentials } from '@/redux/slices/authSlice';
 import React, { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { useDispatch, useSelector } from 'react-redux';
-import { Navigate, useNavigate } from 'react-router-dom'
+import { Link, Navigate, useNavigate } from 'react-router-dom'
 import { toast } from 'sonner';
 
 const Login = () => {
-  const {user} = useSelector((state) => state.auth);
+  const { user } = useSelector((state) => state.auth);
   const { register, handleSubmit, formState: { errors } } = useForm();
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { theme } = useTheme();
-  const [login, {isLoading}] = useLoginMutation();
+  const [login, { isLoading }] = useLoginMutation();
 
   const submitHandler = async (data) => {
-    console.log(import.meta.env.VITE_API_URL);
     try {
       const result = await login(data).unwrap();
       dispatch(setCredentials(result));
@@ -27,7 +26,7 @@ const Login = () => {
       toast.success("Login successful!");
     } catch (error) {
       console.error("Login error:", error);
-      toast.error("Login failed: " + (error.data?.message || error.message ));
+      toast.error("Login failed: " + (error.data?.message || error.message));
     }
   }
 
@@ -79,11 +78,14 @@ const Login = () => {
             })}
             error={errors.password ? errors.password.message : ""}
           />
-          <p className='text-sky-500 hover:underline hover:cursor-pointer -mt-4 mb-4 text-right w-full'>Forgot Password?</p>
-          {isLoading ? <p className='text-center text-xs dark:text-gray-400 text-gray-600'>Logging in...</p> : <Button type="submit" className="w-full my-2">Login</Button>} 
+          <p className='text-sky-500 hover:underline hover:cursor-pointer mt-2 mb-4 text-right w-full'>Forgot Password?</p>
+          {isLoading ? <p className='text-center text-xs dark:text-gray-400 text-gray-600'>Logging in...</p> : <Button type="submit" className="w-full my-2">Login</Button>}
         </div>
 
 
+        <Link to="/register" >
+          <p className='text-center text-xs dark:text-gray-400 text-gray-600 underline mb-2'>Dont have an account? Sign Up</p>
+        </Link>
         <p className='text-center text-xs dark:text-gray-400 text-gray-600'>Please keep your credientials safe</p>
       </form>
     </div>
