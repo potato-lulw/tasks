@@ -2,21 +2,35 @@ import { useTheme } from '@/components/ThemeContextProvider';
 import { ModeToggle } from '@/components/Toggle';
 import { Button } from '@/components/ui/button';
 import Textbox from '@/components/ui/Textbox';
+import { useLoginMutation } from '@/redux/slices/api/authApiSlice';
+import { setCredentials } from '@/redux/slices/authSlice';
 import React, { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Navigate, useNavigate } from 'react-router-dom'
+import { toast } from 'sonner';
 
 const Login = () => {
   const {user} = useSelector((state) => state.auth);
   const { register, handleSubmit, formState: { errors } } = useForm();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const { theme } = useTheme();
-  
+  const [login, {isLoading}] = useLoginMutation();
+
   const submitHandler = async (data) => {
-    console.log('Submit')
+    console.log(import.meta.env.VITE_API_URL);
+    try {
+      const result = await login(data).unwrap();
+      dispatch(setCredentials(result));
+      navigate('/dashboard', { replace: true });
+      toast.success("Login successful!");
+    } catch (error) {
+      console.error("Login error:", error);
+      toast.error("Login failed: " + (error.data?.message || error.message ));
+    }
   }
-  console.log(user);
+
   useEffect(() => {
     if (user) {
       navigate('/dashboard', { replace: true });
@@ -66,7 +80,7 @@ const Login = () => {
             error={errors.password ? errors.password.message : ""}
           />
           <p className='text-sky-500 hover:underline hover:cursor-pointer -mt-4 mb-4 text-right w-full'>Forgot Password?</p>
-          <Button type="submit" className="w-full my-2">Login</Button>
+          {isLoading ? <p className='text-center text-xs dark:text-gray-400 text-gray-600'>Logging in...</p> : <Button type="submit" className="w-full my-2">Login</Button>} 
         </div>
 
 

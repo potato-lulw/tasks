@@ -22,8 +22,8 @@ router.post('/create', createTask);
 router.put("/create-subtask/:id", createSubTask);
 router.put("/update/:id", updateTask);
 router.put("/:id", trashTask);
-router.put("/delete-restore", deleteRestoreTask);
-router.put("/delete-restore/:id", deleteRestoreTask);
+router.delete("/delete-restore", deleteRestoreTask);
+router.delete("/delete-restore/:id", deleteRestoreTask);
 
 
 

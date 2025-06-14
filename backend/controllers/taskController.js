@@ -284,7 +284,7 @@ export const deleteRestoreTask = async (req, res) => {
             if (!task) {
                 return res.status(404).json({ message: 'Task not found' });
             }
-            await task.remove();
+            await task.deleteOne({id});
             const text = `The task has been deleted: ${task.title}.`;
             await Notification.create({
                 team: task.team,
