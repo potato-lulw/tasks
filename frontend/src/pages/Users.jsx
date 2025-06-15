@@ -1,7 +1,7 @@
 import { Button } from '@/components/ui/button'
 import React, { useEffect, useState } from 'react'
 import { BiMessageAltAdd } from 'react-icons/bi'
-import { users } from '@/assets/data'
+
 import { formatDate, getInitials } from '@/utils/utils'
 import {
   Table,
@@ -32,7 +32,7 @@ const Users = () => {
   
   const [registerUser] = useRegisterMutation();
   const methods = useForm();
-  const [userList, setUserList] = useState(users);
+  const [userList, setUserList] = useState([]);
   const { data, isLoading: isFetching, error } = useGetTeamQuery();
 
   useEffect(() => {
