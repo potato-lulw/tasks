@@ -26,7 +26,7 @@ import CustomDialog from '@/components/ui/CustomDialog'
 import { useRegisterMutation } from '@/redux/slices/api/authApiSlice'
 import { toast } from 'sonner'
 import { useForm, FormProvider } from "react-hook-form";
-import { useDeleteUserMutation, useGetTeamQuery, useUserActionMutation } from '@/redux/slices/api/userApiSlice'
+import { useDeleteUserMutation, useGetTeamQuery, useUpdateUserMutation, useUserActionMutation } from '@/redux/slices/api/userApiSlice'
 
 const Users = () => {
 
@@ -36,6 +36,7 @@ const Users = () => {
   const { data, isLoading: isFetching, error, refetch } = useGetTeamQuery();
   const [deleteUser] = useDeleteUserMutation();
   const [userAction] = useUserActionMutation();
+  const [updateUser] = useUpdateUserMutation();
 
   useEffect(() => {
     if (error) {
@@ -91,6 +92,19 @@ const Users = () => {
     }
   }
 
+  const handleEditUser = async (data) => {
+  console.log("Editing user with data:", data);
+  try {
+    await updateUser({ ...data, _id: data.id }).unwrap();
+    toast.success("User updated successfully!");
+    refetch();
+  } catch (error) {
+    console.error("Error updating user:", error);
+    toast.error("Failed to update user: " + (error.data?.message || error.message));
+  }
+};
+
+
   return (
     <div className='h-full flex flex-col gap-4 my-2 w-full'>
       <div className='flex items-center justify-between py-2'>
@@ -125,6 +139,7 @@ const Users = () => {
               <TableHead>Admin</TableHead>
               <TableHead>Status</TableHead>
               <TableHead>Created</TableHead>
+              <TableHead></TableHead>
               <TableHead className="text-right">Delete</TableHead>
             </TableRow>
           </TableHeader>
@@ -180,6 +195,21 @@ const Users = () => {
                   </TableCell>
 
                   <TableCell>{formatDate(new Date(user.createdAt))}</TableCell>
+                  <TableCell>
+                    <FormProvider {...methods}>
+                      <CustomDialog
+                        triggerLabel={<Button variant="secondary">Edit</Button>}
+                        triggerIcon=""
+                        title="Edit User"
+                        description="Fill in the details of the User."
+                        onSubmit={methods.handleSubmit((formData) => handleEditUser({ ...formData, id: user._id }))}
+                        submitLabel="Edit"
+                        customCss=""
+                      >
+                        <AddUserForm data={user} />
+                      </CustomDialog>
+                    </FormProvider>
+                  </TableCell>
                   {/* <TableCell className="text-right"><Button variant="destructive" onClick={() => handleDelete(user._id)}>Delete</Button></TableCell> */}
                   <TableCell className="text-right">
                     <CustomDialog

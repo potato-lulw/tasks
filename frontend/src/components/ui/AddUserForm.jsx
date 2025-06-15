@@ -1,4 +1,4 @@
-import React  from 'react';
+import React, { useEffect }  from 'react';
 import {
   Select,
   SelectContent,
@@ -9,9 +9,22 @@ import {
 import { Input } from './input';
 import { useFormContext, Controller } from "react-hook-form";
 
-const AddUserForm = () => {
-  const { register, control } = useFormContext();
+const AddUserForm = ({data}) => {
+
   
+  const { register, control, reset } = useFormContext();
+
+  useEffect(() => {
+    if (data) {
+      reset({
+        name: data.name || '',
+        email: data.email || '',
+        title: data.title || '',
+        role: data.role || '',
+        isAdmin: data.isAdmin || false,
+      });
+    }
+  }, [data, reset]);
 
   return (
     <div className='flex flex-col gap-4'>
@@ -48,22 +61,11 @@ const AddUserForm = () => {
 
       <div>
         <p>Role</p>
-        <Controller
-          name="role"
-          control={control}
-          render={({ field }) => (
-            <Select onValueChange={field.onChange} value={field.value}>
-              <SelectTrigger className="w-full border-2">
-                <SelectValue placeholder="Select role" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="Admin">Admin</SelectItem>
-                <SelectItem value="Manager">Manager</SelectItem>
-                <SelectItem value="Developer">Developer</SelectItem>
-                <SelectItem value="Viewer">Viewer</SelectItem>
-              </SelectContent>
-            </Select>
-          )}
+        <Input
+          type="text"
+          placeholder="e.g., Developer"
+          className="w-full"
+          {...register("role")}
         />
       </div>
 
