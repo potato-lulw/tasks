@@ -13,6 +13,27 @@ export const userApiSlice = apiSlice.injectEndpoints({
             }),
             invalidatesTags: ["User"],
         }),
+        deleteUser: builder.mutation({
+            query: (id) => ({
+                url: `${USER_URL}/${id}`,
+                method: "DELETE",
+                credentials: "include",
+            }),
+            invalidatesTags: ["User"],
+        }),
+        userAction: builder.mutation({
+            query: ({ id, isActive }) => ({
+                url: `${USER_URL}/${id}`,
+                method: "PUT",
+                body: { isActive }, // ✅ send the isActive value in body
+                credentials: "include",
+                headers: {
+                    "Content-Type": "application/json", // ✅ just to be safe
+                },
+            }),
+            invalidatesTags: ["User"],
+        }),
+
         getTeam: builder.query({
             query: () => ({
                 url: `${USER_URL}/get-team`,
@@ -21,9 +42,9 @@ export const userApiSlice = apiSlice.injectEndpoints({
             }),
             providesTags: ["User"],
         }),
-       
-        
+
+
     })
 })
 
-export const { useUpdateUserMutation, useGetTeamQuery } = userApiSlice
+export const { useUpdateUserMutation, useGetTeamQuery, useDeleteUserMutation, useUserActionMutation } = userApiSlice

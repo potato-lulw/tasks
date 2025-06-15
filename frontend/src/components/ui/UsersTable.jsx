@@ -1,6 +1,6 @@
-import { users } from '@/assets/data';
+
 import { getInitials } from '@/utils/utils';
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
     Table,
     TableBody,
@@ -9,6 +9,7 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table";
+import { useGetTeamQuery } from '@/redux/slices/api/userApiSlice';
 
 // Helper to get days ago
 const getDaysAgo = (dateString) => {
@@ -21,7 +22,15 @@ const getDaysAgo = (dateString) => {
 
 const UsersTable = () => {
 
-
+    const {data, isLoading, error} = useGetTeamQuery();
+    const [users, setUsers] = React.useState([]);
+    useEffect(() => {
+        if (data) {
+            setUsers(data);
+        } else if (error) {
+            console.error("Error fetching users:", error);
+        }
+    }, [data, error]);
 
     return (
         <Table>

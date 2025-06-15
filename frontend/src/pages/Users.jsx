@@ -1,6 +1,6 @@
 import { Button } from '@/components/ui/button'
 import React, { useEffect, useState } from 'react'
-import { BiMessageAltAdd } from 'react-icons/bi'
+import { BiLock, BiLockOpen, BiMessageAltAdd, BiTrash } from 'react-icons/bi'
 
 import { formatDate, getInitials } from '@/utils/utils'
 import {
@@ -26,34 +26,68 @@ import CustomDialog from '@/components/ui/CustomDialog'
 import { useRegisterMutation } from '@/redux/slices/api/authApiSlice'
 import { toast } from 'sonner'
 import { useForm, FormProvider } from "react-hook-form";
-import { useGetTeamQuery} from '@/redux/slices/api/userApiSlice'
+import { useDeleteUserMutation, useGetTeamQuery, useUserActionMutation } from '@/redux/slices/api/userApiSlice'
 
 const Users = () => {
-  
+
   const [registerUser] = useRegisterMutation();
   const methods = useForm();
   const [userList, setUserList] = useState([]);
-  const { data, isLoading: isFetching, error } = useGetTeamQuery();
+  const { data, isLoading: isFetching, error, refetch } = useGetTeamQuery();
+  const [deleteUser] = useDeleteUserMutation();
+  const [userAction] = useUserActionMutation();
 
   useEffect(() => {
+    if (error) {
+      console.error("Error fetching users:", error);
+      toast.error("Failed to fetch users: " + (error.data?.message || error.message));
+      return;
+    }
     setUserList(data || []);
-  }, [data])
- 
+  }, [data, error])
+
+  const userActionHandler = async ({ id, isActive }) => {
+    if (!id || typeof isActive !== 'boolean') {
+      toast.error("Invalid user data passed to handler.");
+      return;
+    }
+
+    try {
+      await userAction({ id, isActive: !isActive }).unwrap();
+      toast.success(`User ${isActive ? 'deactivated' : 'activated'} successfully!`);
+      refetch();
+    } catch (error) {
+      toast.error("Failed to perform user action: " + (error.data?.message || error.message));
+      console.error("Error performing user action:", error);
+    }
+  }
+
   const onSubmit = async (data) => {
     try {
 
-      
-        console.log('Form Submitted: ' + data);
-        console.log(data)
-        const result = await registerUser({...data, password: data.email}).unwrap();
-        console.log("User registered successfully:", result);
-        toast.success("User registered successfully!");
-        methods.reset(); // Reset the form after successful submission
-      
+
+      console.log('Form Submitted: ' + data);
+      console.log(data)
+      const result = await registerUser({ ...data, password: data.email }).unwrap();
+      console.log("User registered successfully:", result);
+      toast.success("User registered successfully!");
+      methods.reset(); // Reset the form after successful submission
+
     } catch (error) {
       console.error("Error registering user:", error);
       toast.error("Failed to register user: " + (error.data?.message || error.message));
       return;
+    }
+  }
+
+  const handleDelete = async (id) => {
+    try {
+      await deleteUser(id).unwrap();
+      setUserList(userList.filter(user => user._id !== id)); // Update local state
+      toast.success("User deleted successfully!");
+    } catch (error) {
+      console.error("Error deleting user:", error);
+      toast.error("Failed to delete user: " + (error.data?.message || error.message));
     }
   }
 
@@ -91,6 +125,7 @@ const Users = () => {
               <TableHead>Admin</TableHead>
               <TableHead>Status</TableHead>
               <TableHead>Created</TableHead>
+              <TableHead className="text-right">Delete</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -123,26 +158,49 @@ const Users = () => {
                   </TableCell>
 
                   <TableCell>
-                    <span
-                      className={`px-2 py-1 text-xs rounded-md ${user.isActive
-                        ? "bg-green-100 text-green-800"
-                        : "bg-red-100 text-red-800"
-                        }`}
-                    >
-                      {user.isActive ? "Active" : "Inactive"}
-                    </span>
+                    <CustomDialog
+                      title={user.isActive ? 'Deactivate User?' : 'Activate User?'}
+                      triggerLabel={
+                        <span
+                          className={`px-2 py-1 text-xs rounded-md ${user.isActive
+                            ? "bg-green-100 text-green-800"
+                            : "bg-red-100 text-red-800"
+                            }`}
+                        >
+                          {user.isActive ? "Active" : "Inactive"}
+                        </span>
+                      }
+                      triggerIcon=""
+                      description={user.isActive ? 'Are you sure you want to deactivate this user?' : 'Are you sure you want to activate this user?'}
+                      submitLabel={user.isActive ? 'Deactivate' : 'Activate'}
+                      customCss=''
+                      onSubmit={() => userActionHandler({ id: user._id, isActive: user.isActive })}
+                    />
+
                   </TableCell>
 
                   <TableCell>{formatDate(new Date(user.createdAt))}</TableCell>
-                </TableRow>
-              )) 
-              : (
-                <TableRow>
-                  <TableCell colSpan="7" className="text-center">
-                    {isFetching ? "Loading..." : "No users found."}
+                  {/* <TableCell className="text-right"><Button variant="destructive" onClick={() => handleDelete(user._id)}>Delete</Button></TableCell> */}
+                  <TableCell className="text-right">
+                    <CustomDialog
+                      title='Delete this User?'
+                      triggerLabel=""
+                      triggerIcon={<BiTrash size={20} className="text-destructive" />}
+                      description='Are you sure you want to delete this User?'
+                      submitLabel='Delete'
+                      customCss='justify-end'
+                      onSubmit={() => handleDelete(user._id)}
+                    />
                   </TableCell>
                 </TableRow>
-              )
+              ))
+                : (
+                  <TableRow>
+                    <TableCell colSpan="7" className="text-center">
+                      {isFetching ? "Loading..." : "No users found."}
+                    </TableCell>
+                  </TableRow>
+                )
             }
 
           </TableBody>

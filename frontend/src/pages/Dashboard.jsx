@@ -11,9 +11,11 @@ import { LucideClipboardEdit } from "lucide-react";
 
 import { FaListUl, FaRegNewspaper } from "react-icons/fa";
 import { MdOutlineAdminPanelSettings } from "react-icons/md";
+import { useGetTeamQuery } from "@/redux/slices/api/userApiSlice";
 const Dashboard = () => {
   const { theme } = useTheme();
   const totals = summary.tasks;
+  const {data, isLoading: isFetching, error} = useGetTeamQuery();
   const stats = [
     {
       _id: "1",
@@ -70,7 +72,7 @@ const Dashboard = () => {
 
         <div className="p-2 md:p-8 bg-background rounded-xl 2xl:w-1/2 w-full">
 
-          <UsersTable />
+          <UsersTable  />
         </div>
       </div>
 
