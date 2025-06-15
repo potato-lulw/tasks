@@ -80,7 +80,7 @@ export const logoutUser = async (req, res) => {
 
 export const getTeamList = async (req, res) => {
     try {
-        const user = await User.find({}).select('-password -tasks -isAdmin');
+        const user = await User.find({}).select('-password -tasks');
         if (!user) {
             return res.status(404).json({ message: 'No users found' });
         }
