@@ -27,9 +27,11 @@ import { useRegisterMutation } from '@/redux/slices/api/authApiSlice'
 import { toast } from 'sonner'
 import { useForm, FormProvider } from "react-hook-form";
 import { useDeleteUserMutation, useGetTeamQuery, useUpdateUserMutation, useUserActionMutation } from '@/redux/slices/api/userApiSlice'
+import { useDispatch, useSelector } from 'react-redux';
+import { setCredentials } from '@/redux/slices/authSlice';
 
 const Users = () => {
-
+  const {user : currentUser} = useSelector((state) => state.auth);
   const [registerUser] = useRegisterMutation();
   const methods = useForm();
   const [userList, setUserList] = useState([]);
@@ -37,6 +39,7 @@ const Users = () => {
   const [deleteUser] = useDeleteUserMutation();
   const [userAction] = useUserActionMutation();
   const [updateUser] = useUpdateUserMutation();
+  const dispatch = useDispatch();
 
   useEffect(() => {
     if (error) {
@@ -67,8 +70,6 @@ const Users = () => {
     try {
 
 
-      console.log('Form Submitted: ' + data);
-      console.log(data)
       const result = await registerUser({ ...data, password: data.email }).unwrap();
       console.log("User registered successfully:", result);
       toast.success("User registered successfully!");
@@ -93,9 +94,14 @@ const Users = () => {
   }
 
   const handleEditUser = async (data) => {
-  console.log("Editing user with data:", data);
+
   try {
     await updateUser({ ...data, _id: data.id }).unwrap();
+    
+    if( data.id === currentUser._id) {
+      console.log("Updating user credentials in auth slice");
+      dispatch(setCredentials({...data, _id: data.id })); // Update user in auth slice
+    }
     toast.success("User updated successfully!");
     refetch();
   } catch (error) {
@@ -153,7 +159,7 @@ const Users = () => {
                         {getInitials(user.name)}
                       </div>
                       <div className="flex flex-col">
-                        <span className="font-medium">{user.name}</span>
+                        <span className="font-medium">{user.name } {currentUser._id == user.id ? " (You)" : ""} </span>
                       </div>
                     </div>
                   </TableCell>

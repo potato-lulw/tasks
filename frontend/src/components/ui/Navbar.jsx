@@ -20,7 +20,7 @@ import {
 
 
 const Navbar = () => {
-  const isSidebarOpen = useSelector((state) => state.auth.isSidebarOpen);
+  // const isSidebarOpen = useSelector((state) => state.auth.isSidebarOpen);
   const dispatch = useDispatch();
   const openSidebar = () => {
     dispatch(setOpenSidebar(true));
