@@ -49,10 +49,28 @@ export const userApiSlice = apiSlice.injectEndpoints({
                 body: credentials,
                 credentials: "include",
             })
-        })
+        }),
+        getNotifications: builder.query({
+            query: () => ({
+                url: `${USER_URL}/Notifications`,
+                method: "GET",
+                credentials: "include",
+            })
+        }),
+        readNotification: builder.mutation({
+            query: ({ id, isReadType = "single" }) => ({
+                url: `${USER_URL}/read-noti`,
+                method: "PUT",
+                body: { id, isReadType }, // send both
+                credentials: "include",
+            }),
+            invalidatesTags: ["User"],
+        }),
+
+
 
 
     })
 })
 
-export const { useUpdateUserMutation, useGetTeamQuery, useDeleteUserMutation, useUserActionMutation, useChangePasswordMutation } = userApiSlice
+export const { useUpdateUserMutation, useGetTeamQuery, useDeleteUserMutation, useUserActionMutation, useChangePasswordMutation, useGetNotificationsQuery, useReadNotificationMutation } = userApiSlice

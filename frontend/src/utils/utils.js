@@ -53,3 +53,11 @@ export const BGS = [
     "bg-green-600",
 ];
 
+export const getDaysAgo = (dateString) => {
+    const createdDate = new Date(dateString);
+    const now = new Date();
+    const diffTime = now - createdDate;
+    const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+    return `${diffDays} day${diffDays !== 1 ? 's' : ''} ago`;
+};
+

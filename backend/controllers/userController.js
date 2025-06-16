@@ -136,11 +136,11 @@ export const updateUserProfile = async (req, res) => {
 export const markNotificationRead = async (req, res) => {
     try {
         const { userID } = req.user;
-        const { isReadType, id } = req.query;
+        const { isReadType, id } = req.body; // ← was req.query before
 
         if (isReadType === 'all') {
             const notifications = await Notification.updateMany(
-                { team: userID, isRead: {$nin: [userID]} },
+                { team: userID, isRead: { $nin: [userID] } },
                 { $push: { isRead: userID } },
                 { new: true }
             );
@@ -149,25 +149,26 @@ export const markNotificationRead = async (req, res) => {
             }
             return res.status(200).json({ message: 'All notifications marked as read' });
         } else {
-            const notification = await Notification.findById({_id: id});
+            const notification = await Notification.findById(id);
             if (!notification) {
                 return res.status(404).json({ message: 'Notification not found' });
             }
+
             const updatedNotification = await Notification.findOneAndUpdate(
-                {_id : id, isRead: {$nin: [userID]}},
+                { _id: id, isRead: { $nin: [userID] } },
                 { $push: { isRead: userID } },
                 { new: true }
             );
             if (!updatedNotification) {
-                return res.status(400).json({ message: 'Couldnt update notification' });
+                return res.status(400).json({ message: "Couldn't update notification" });
             }
             return res.status(200).json(updatedNotification);
         }
-        
     } catch (error) {
         return res.status(500).json({ message: 'Internal server error: ' + error.message });
     }
 }
+
 export const changeUserPassword = async (req, res) => {
     try {
         const { userID } = req.user;
