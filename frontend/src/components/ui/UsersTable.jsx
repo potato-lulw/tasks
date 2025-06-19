@@ -1,6 +1,6 @@
 
 import { getInitials } from '@/utils/utils';
-import React, { useEffect } from 'react';
+import React from 'react';
 import {
     Table,
     TableBody,
@@ -9,7 +9,7 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table";
-import { useGetTeamQuery } from '@/redux/slices/api/userApiSlice';
+
 
 // Helper to get days ago
 const getDaysAgo = (dateString) => {
@@ -20,60 +20,49 @@ const getDaysAgo = (dateString) => {
     return `${diffDays} day${diffDays !== 1 ? 's' : ''} ago`;
 };
 
-const UsersTable = () => {
-
-    const {data, isLoading, error} = useGetTeamQuery();
-    const [users, setUsers] = React.useState([]);
-    useEffect(() => {
-        if (data) {
-            setUsers(data);
-        } else if (error) {
-            console.error("Error fetching users:", error);
-        }
-    }, [data, error]);
+const UsersTable = ({users}) => {
+    
 
     return (
         <Table>
             <TableHeader>
                 <TableRow>
                     <TableHead>Full Name</TableHead>
-                    <TableHead>Status</TableHead>
+                    <TableHead>Title</TableHead>
+                    <TableHead>Role</TableHead>
+                    <TableHead>Admin</TableHead>
                     <TableHead>Created</TableHead>
                 </TableRow>
             </TableHeader>
             <TableBody>
-                {
-                    users.map(user => (
-                        <TableRow key={user._id}>
-                            <TableCell>
-                                <div className="flex items-center gap-3">
-                                    {/* Avatar Circle */}
-                                    <div className="w-10 h-10 rounded-full bg-indigo-600 text-white flex items-center justify-center text-sm font-medium">
-                                        {getInitials(user.name)}
-                                    </div>
-                                    {/* Name + Title */}
-                                    <div className="flex flex-col">
-                                        <span className="font-medium">{user.name}</span>
-                                        <span className="text-sm text-muted-foreground">{user.title}</span>
-                                    </div>
-
+                {users.map(user => (
+                    <TableRow key={user._id}>
+                        <TableCell>
+                            <div className="flex items-center gap-3">
+                                <div className="w-10 h-10 rounded-full bg-indigo-600 text-white flex items-center justify-center text-sm font-medium">
+                                    {getInitials(user.name)}
                                 </div>
-                            </TableCell>
-                            <TableCell>
-                                <span
-                                    className={`px-2 py-1 text-xs rounded-md ${user.isActive
-                                            ? "bg-green-100 text-green-800"
-                                            : "bg-red-100 text-red-800"
-                                        }`}
-                                >
-                                    {user.isActive ? "Active" : "Inactive"}
-                                </span>
-                            </TableCell>
-                            <TableCell>{getDaysAgo(user.createdAt)}</TableCell>
-                        </TableRow>
-                    ))
-                }
-
+                                <div className="flex flex-col">
+                                    <span className="font-medium">{user.name}</span>
+                                </div>
+                            </div>
+                        </TableCell>
+                        <TableCell>{user.title}</TableCell>
+                        <TableCell>{user.role}</TableCell>
+                        <TableCell>
+                            <span
+                                className={`px-2 py-1 text-xs rounded-md ${
+                                    user.isAdmin
+                                        ? "bg-green-100 text-green-800"
+                                        : "bg-red-100 text-red-800"
+                                }`}
+                            >
+                                {user.isAdmin ? "Yes" : "No"}
+                            </span>
+                        </TableCell>
+                        <TableCell>{getDaysAgo(user.createdAt)}</TableCell>
+                    </TableRow>
+                ))}
             </TableBody>
         </Table>
     );

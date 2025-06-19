@@ -1,7 +1,7 @@
 import React from "react"
 import { ChartContainer } from "./chart"
 import { Bar, BarChart, CartesianGrid, XAxis, Tooltip, YAxis, Legend } from "recharts"
-import { chartData } from "@/assets/data"
+
 
 
 const chartConfig = {
@@ -11,7 +11,12 @@ const chartConfig = {
     },
 }
 
-const MyChart = () => {
+const MyChart = ({totals}) => {
+    const chartData = [
+        { name: "Todo", total: totals.todo || 0 },
+        { name: "In Progress", total: totals["in progress"] || 0 },
+        { name: "Completed", total: totals.completed || 0 },
+    ]
     return (
         <ChartContainer config={chartConfig} className="max-h-[300px] 2xl:min-h-[500px] bg-secondary rounded-md p-2">
             <BarChart data={chartData}>
