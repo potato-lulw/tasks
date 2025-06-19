@@ -1,7 +1,7 @@
 import { setOpenSidebar } from '@/redux/slices/authSlice';
 import React from 'react'
 import { IoSearch } from "react-icons/io5";
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { Button } from './button';
 import { LuPanelLeftOpen } from 'react-icons/lu';
 import { ModeToggle } from '../Toggle';

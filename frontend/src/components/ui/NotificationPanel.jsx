@@ -23,7 +23,7 @@ import { toast } from 'sonner';
 
 const NotificationPanel = () => {
     const [ open, setOpen ] = useState(false);
-    const { data: getNotifications, isLoading: isFetching, error: notificationError } = useGetNotificationsQuery();
+    const { data: getNotifications, error: notificationError } = useGetNotificationsQuery();
     const [notifications, setNotifications] = useState([]);
     const [readNotification] = useReadNotificationMutation();
 
@@ -35,7 +35,7 @@ const NotificationPanel = () => {
             console.log("No notifications found: ", notificationError);
             setNotifications([]);
         }
-    }, [getNotifications]);
+    }, [getNotifications, notificationError]);
 
     const handleMarkAllRead = async () => {
         // Your logic here

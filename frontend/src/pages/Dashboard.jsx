@@ -11,11 +11,11 @@ import { LucideClipboardEdit } from "lucide-react";
 
 import { FaListUl, FaRegNewspaper } from "react-icons/fa";
 import { MdOutlineAdminPanelSettings } from "react-icons/md";
-import { useGetTeamQuery } from "@/redux/slices/api/userApiSlice";
+
 const Dashboard = () => {
   const { theme } = useTheme();
   const totals = summary.tasks;
-  const {data, isLoading: isFetching, error} = useGetTeamQuery();
+  
   const stats = [
     {
       _id: "1",
