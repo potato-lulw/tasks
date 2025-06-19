@@ -27,8 +27,15 @@ const AddTaskForm = ({
     }) => {
 
 
-    console.log(taskTitle, assignedUser, taskStage, taskDate, taskPriority, selectedFile)
+    console.log("Task Title:", taskTitle);
+    console.log("Assigned User:", assignedUser);
+    console.log("Task Stage:", taskStage);
+    console.log("Task Date:", taskDate);
+    console.log("Task Priority:", taskPriority);
+    console.log("Selected File:", selectedFile);
+
     return (
+        
         <div className='flex flex-col gap-4'>
             {/* Task Title */}
             <div>
@@ -69,9 +76,9 @@ const AddTaskForm = ({
                             <SelectValue placeholder={taskStage != "" ? taskStage : "Select stage"} />
                         </SelectTrigger>
                         <SelectContent>
-                            <SelectItem value="Todo">Todo</SelectItem>
-                            <SelectItem value="In Progress">In Progress</SelectItem>
-                            <SelectItem value="Completed">Completed</SelectItem>
+                            <SelectItem value="todo">Todo</SelectItem>
+                            <SelectItem value="in Progress">In Progress</SelectItem>
+                            <SelectItem value="completed">Completed</SelectItem>
                         </SelectContent>
                     </Select>
                 </div>
