@@ -24,7 +24,7 @@ import {
     },
     {
       label: "In Progress",
-      link: "/tasks/inprogress",
+      link: "/tasks/in%20progress",
       icon: <AiOutlineLoading3Quarters />,
     },
     {

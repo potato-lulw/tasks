@@ -14,13 +14,20 @@ export const taskApiSlice = apiSlice.injectEndpoints({
                 invalidatesTags: ["Task"],
             }),
             getTasks: builder.query({
-                query: () => ({
-                    url: `${TASK_URL}`,
-                    method: "GET",
-                    credentials: "include",
-                }),
+                query: ({ stage, isTrashed }) => {
+                    const params = new URLSearchParams();
+                    if (stage) params.append("stage", stage);
+                    if (isTrashed) params.append("isTrashed", isTrashed);
+
+                    return {
+                        url: `${TASK_URL}?${params.toString()}`,
+                        method: "GET",
+                        credentials: "include",
+                    };
+                },
                 providesTags: ["Task"],
             }),
+
             getDashboardStats: builder.query({
                 query: () => ({
                     url: `${TASK_URL}/dashboard`,
@@ -29,8 +36,17 @@ export const taskApiSlice = apiSlice.injectEndpoints({
                 }),
                 providesTags: ["Task"],
             }),
+            editTask: builder.mutation({
+                query: ({ id, ...credentials }) => ({
+                    url: `${TASK_URL}/update/${id}`,
+                    method: "PUT",
+                    body: credentials,
+                    credentials: "include",
+                }),
+                invalidatesTags: ["Task"],
+            }),
         }
     )
 })
 
-export const { useCreateTaskMutation, useGetTasksQuery, useGetDashboardStatsQuery } = taskApiSlice;
+export const { useCreateTaskMutation, useGetTasksQuery, useGetDashboardStatsQuery, useEditTaskMutation } = taskApiSlice;

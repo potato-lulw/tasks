@@ -164,13 +164,19 @@ export const dashboardStatistics = async (req, res) => {
 }
 export const getTasks = async (req, res) => {
     try {
+        
         const { stage, isTrashed } = req.query;
-        let query = {
-            isTrashed: isTrashed ? true : false,
-        }; 
+        console.log('Stage:', stage, 'Is Trashed:', isTrashed);
+
+        let query = {};
+
+        // 🔥 Fix: only include isTrashed if explicitly set
+        if (typeof isTrashed !== "undefined") {
+        query.isTrashed = isTrashed === "true"; // string -> boolean
+        }
 
         if (stage) {
-            query.stage = stage;
+        query.stage = stage;
         }
 
         let queryRes = await Task.find(query).populate({path: 'team', select: 'name title email'}).sort({createdAt: -1});
