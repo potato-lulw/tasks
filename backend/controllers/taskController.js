@@ -208,7 +208,7 @@ export const getTask = async (req, res) => {
 }
 export const createSubTask = async (req, res) => {
     try {
-        const { title, date, tag } = req.body;
+        const { title, date = new Date(), tag } = req.body;
         const { id } = req.params;  
         const subtask = {
             title,
@@ -222,7 +222,7 @@ export const createSubTask = async (req, res) => {
         }
         task.subTasks.push(subtask);
         await task.save();
-        const text = `A new subtask has been added to the task: ${task.title}. The subtask title is ${title} and the due date is ${date.toDateString()}.`;
+        const text = `A new subtask has been added to the task: ${task.title}. The subtask title is ${title} and the due date is ${new Date(date).toDateString()}.`;
         await Notification.create({
             team: task.team,
             text, 

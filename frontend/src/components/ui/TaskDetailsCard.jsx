@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useForm, FormProvider } from 'react-hook-form';
 import { MdKeyboardArrowDown, MdKeyboardArrowUp, MdKeyboardDoubleArrowUp } from "react-icons/md";
 import { BsThreeDots } from "react-icons/bs";
@@ -22,17 +22,25 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { useDeleteTaskMutation, useEditTaskMutation } from '@/redux/slices/api/taskApiSlice';
+import { useCreateSubtaskMutation, useDeleteTaskMutation, useEditTaskMutation } from '@/redux/slices/api/taskApiSlice';
 import { toast } from 'sonner';
 
 const TaskDetailsCard = ({ task }) => {
-    const { data: users, isLoading: usersLoading } = useGetTeamQuery();
+    const { data: users } = useGetTeamQuery();
     const navigate = useNavigate();
-    const [editTask, isLoading, error] = useEditTaskMutation();
+    const [editTask] = useEditTaskMutation();
     const [deleteTask] = useDeleteTaskMutation();
-    const [subTaskTitle, setSubTaskTitle] = useState("");
-    const [subTaskDate, setSubTaskDate] = useState("");
-    const [subTaskTag, setSubTaskTag] = useState("");
+    const [createSubtask] = useCreateSubtaskMutation();
+    
+
+    const subtaskFormMethods = useForm({
+        defaultValues: {
+            title: "",
+            date: "",
+            tag: "",
+        },
+    });
+
 
     const handleEditSubmit = async (data) => {
         console.log("Saving edits for", task._id, data);
@@ -44,7 +52,7 @@ const TaskDetailsCard = ({ task }) => {
                 stage: data.stage,
                 date: data.date,
                 priority: data.priority,
-                asset: data.asset 
+                asset: data.asset
             }).unwrap();
             console.log("Task updated successfully:", results);
             toast.success("Task updated successfully!");
@@ -65,8 +73,17 @@ const TaskDetailsCard = ({ task }) => {
         }
     };
 
-    const handleSubtaskSubmit = () => {
-        console.log("Add subtask logic here");
+
+    const handleSubtaskSubmit = async (data) => {
+        console.log("Subtask submitted:", data);
+        try {
+            await createSubtask(data).unwrap();
+            toast.success("Subtask created successfully!");
+            subtaskFormMethods.reset();
+        } catch (error) {
+            console.error("Error creating subtask:", error);
+            toast.error("Failed to create subtask: " + (error.data?.message || error.message));
+        }
     };
 
     const editFormMethods = useForm({
@@ -86,10 +103,10 @@ const TaskDetailsCard = ({ task }) => {
             <div className='flex flex-col gap-2 max-h-[85px] w-full'>
                 <div className='flex items-center justify-between w-full text-xs'>
                     <div className={`font-bold flex items-center gap-2 text-xs ${task.priority === 'high'
-                            ? 'text-destructive'
-                            : task.priority === 'medium'
-                                ? 'text-orange-500'
-                                : 'text-green-500'
+                        ? 'text-destructive'
+                        : task.priority === 'medium'
+                            ? 'text-orange-500'
+                            : 'text-green-500'
                         }`}>
                         {task.priority === 'high' ? <MdKeyboardDoubleArrowUp size={16} /> : task.priority === 'medium' ? <MdKeyboardArrowUp size={16} /> : <MdKeyboardArrowDown size={16} />}
                         <p>{task.priority.toUpperCase()}</p>
@@ -126,22 +143,17 @@ const TaskDetailsCard = ({ task }) => {
                             </CustomDialog>
 
                             <CustomDialog
-                                title="Add Subtask"
-                                description="Fill in the details of the new subtask."
-                                triggerLabel={<div className="flex items-center gap-2">Add Sub-Task</div>}
-                                onSubmit={handleSubtaskSubmit}
-                                submitLabel="Add"
-                                triggerIcon={<FaPlus className='text-muted-foreground' />}
-                                customCss="text-primary p-2 hover:bg-secondary"
+                                title='Add Subtask'
+                                description='Fill in the details of the new subtask.'
+                                triggerLabel='Add Subtask'
+                                triggerIcon={<BiPlus size={16} />}
+                                onSubmit={subtaskFormMethods.handleSubmit((data) => handleSubtaskSubmit({...data, id: task._id}))}
+                                submitLabel='Add'
+                                customCss='bg-secondary text-primary p-2'
                             >
-                                <AddSubtaskForm
-                                    taskTitle={subTaskTitle}
-                                    setTaskTitle={setSubTaskTitle}
-                                    taskDate={subTaskDate}
-                                    setTaskDate={setSubTaskDate}
-                                    taskTag={subTaskTag}
-                                    setTaskTag={setSubTaskTag}
-                                />
+                                <FormProvider {...subtaskFormMethods}>
+                                    <AddSubtaskForm />
+                                </FormProvider>
                             </CustomDialog>
 
                             <CustomDialog
@@ -200,19 +212,15 @@ const TaskDetailsCard = ({ task }) => {
                 description='Fill in the details of the new subtask.'
                 triggerLabel='Add Subtask'
                 triggerIcon={<BiPlus size={16} />}
-                onSubmit={handleSubtaskSubmit}
+                onSubmit={subtaskFormMethods.handleSubmit((data) => handleSubtaskSubmit({...data, id: task._id}))}
                 submitLabel='Add'
                 customCss='bg-secondary text-primary p-2'
             >
-                <AddSubtaskForm
-                    taskTitle={subTaskTitle}
-                    setTaskTitle={setSubTaskTitle}
-                    taskDate={subTaskDate}
-                    setTaskDate={setSubTaskDate}
-                    taskTag={subTaskTag}
-                    setTaskTag={setSubTaskTag}
-                />
+                <FormProvider {...subtaskFormMethods}>
+                    <AddSubtaskForm />
+                </FormProvider>
             </CustomDialog>
+
         </div>
     );
 };
