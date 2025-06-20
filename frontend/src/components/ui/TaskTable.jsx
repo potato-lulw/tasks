@@ -15,7 +15,11 @@ import UserInfo from "./UserInfo"
 import { FiDelete } from "react-icons/fi"
 import { BiRecycle, BiTrash } from "react-icons/bi"
 import CustomDialog from "./CustomDialog"
+import { toast } from "sonner"
+import { useDeleteRestoreTaskMutation } from "@/redux/slices/api/taskApiSlice"
 const TaskTable = ({ tasks, isTrash = false }) => {
+
+    const [deleteRestoreTask] = useDeleteRestoreTaskMutation();
 
 
     const icons = {
@@ -24,8 +28,26 @@ const TaskTable = ({ tasks, isTrash = false }) => {
         low: <MdKeyboardArrowDown size={24} />
     }
 
-    const handleRestoreButton = (_id) => {
-        console.log('restoring task', _id)
+    const handleRestoreButton = async (id) => {
+        console.log('restoring task', id)
+        try {
+            await deleteRestoreTask({ id, actionType: 'restore' }).unwrap();
+            toast.success('Task restored successfully!');
+        } catch (error) {
+            console.error('Error restoring task:', error);
+            toast.error('Failed to restore task: ' + error.data?.message || error.message);
+        }
+    }
+
+    const handleDeleteButton = async (id) => {
+        console.log('deleting task', id)
+        try {
+            await deleteRestoreTask({ id, actionType: 'delete' }).unwrap();
+            toast.success('Task deleted successfully!');
+        } catch (error) {
+            console.error('Error deleting task:', error);
+            toast.error('Failed to delete task: ' + error.data?.message || error.message);
+        }
     }
 
     return (
@@ -88,7 +110,7 @@ const TaskTable = ({ tasks, isTrash = false }) => {
                                     title='Restore this task?'
                                     triggerLabel=""
                                     triggerIcon={<BiRecycle size={20} className="text-green-500"/>}
-                                    onSubmit={handleRestoreButton}
+                                    onSubmit={() => handleRestoreButton(task._id)}
                                     description='Are you sure you want to restore this task?'
                                     submitLabel='Restore'
                                     customCss=''
@@ -102,6 +124,7 @@ const TaskTable = ({ tasks, isTrash = false }) => {
                                     className="text-destructive" />} 
                                     description='Are you sure you want to delete this task?' 
                                     submitLabel='Delete' 
+                                    onSubmit={()=>handleDeleteButton(task._id)}
                                     customCss=''  />
                                 
                             </div>

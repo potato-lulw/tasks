@@ -53,8 +53,16 @@ export const taskApiSlice = apiSlice.injectEndpoints({
                 }),
                 invalidatesTags: ["Task"],
             }),
+            deleteRestoreTask: builder.mutation({
+                query: ({id, actionType}) => ({
+                    url: `${TASK_URL}/delete-restore/${id}?actionType=${actionType}`,
+                    method: "DELETE",
+                    credentials: "include",
+                }),
+                invalidatesTags: ["Task"],
+            }),
         }
     )
 })
 
-export const { useCreateTaskMutation, useGetTasksQuery, useGetDashboardStatsQuery, useEditTaskMutation, useDeleteTaskMutation } = taskApiSlice;
+export const { useCreateTaskMutation, useGetTasksQuery, useGetDashboardStatsQuery, useEditTaskMutation, useDeleteTaskMutation, useDeleteRestoreTaskMutation } = taskApiSlice;

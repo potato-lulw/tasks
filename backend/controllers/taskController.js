@@ -286,72 +286,61 @@ export const deleteRestoreTask = async (req, res) => {
     try {
         const { id } = req.params;
         const { actionType } = req.query;
-        if(actionType === 'delete') {
 
+        if (['delete', 'restore'].includes(actionType)) {
             const task = await Task.findById(id);
-            if (!task) {
-                return res.status(404).json({ message: 'Task not found' });
-            }
-            await task.deleteOne({id});
-            const text = `The task has been deleted: ${task.title}.`;
-            await Notification.create({
-                team: task.team,
-                text, 
-                task: task._id,
-            });
-            return res.status(200).json({ message: `Task deleted successfully` });
+            if (!task) return res.status(404).json({ message: 'Task not found' });
 
-        } else if(actionType === 'restore') {
-
-            const task = await Task.findById(id);
-            if (!task) {
-                return res.status(404).json({ message: 'Task not found' });
+            if (actionType === 'delete') {
+                await task.deleteOne();
+                await Notification.create({
+                    team: task.team,
+                    text: `The task has been deleted: ${task.title}.`,
+                    task: task._id,
+                });
+                return res.status(200).json({ message: 'Task deleted successfully' });
+            } else {
+                task.isTrashed = false;
+                await task.save();
+                await Notification.create({
+                    team: task.team,
+                    text: `The task has been restored: ${task.title}.`,
+                    task: task._id,
+                });
+                return res.status(200).json({ message: 'Task restored successfully' });
             }
-            task.isTrashed = false;
-            await task.save();
-            const text = `The task has been restored: ${task.title}.`;
-            await Notification.create({
-                team: task.team,
-                text, 
-                task: task._id,
-            });
-            return res.status(200).json({ message: `Task restored successfully` });  
-            
-        } else if (actionType === 'deleteAll') {
-
-            const tasks = await Task.find({isTrashed: true});
-            if (!tasks || tasks.length === 0) {
-                return res.status(404).json({ message: 'No trashed tasks found' });
-            }
-            await Task.deleteMany({isTrashed: true});
-            const text = `All trashed tasks have been deleted.`;
-            await Notification.create({
-                team: tasks[0].team,
-                text, 
-                task: tasks[0]._id,
-            });
-            return res.status(200).json({ message: `All trashed tasks deleted successfully` });
-            
-        } else if (actionType === 'restoreAll') {
-
-            const tasks = await Task.find({isTrashed: true});
-            if (!tasks || tasks.length === 0) {
-                return res.status(404).json({ message: 'No trashed tasks found' });
-            }
-            await Task.updateMany({isTrashed: true}, {isTrashed: false});
-            const text = `All trashed tasks have been restored.`;
-            await Notification.create({
-                team: tasks[0].team,
-                text, 
-                task: tasks[0]._id,
-            });
-            return res.status(200).json({ message: `All trashed tasks restored successfully` });  
-            
         }
+
+        if (['deleteAll', 'restoreAll'].includes(actionType)) {
+            const tasks = await Task.find({ isTrashed: true });
+            if (!tasks.length) return res.status(404).json({ message: 'No trashed tasks found' });
+
+            if (actionType === 'deleteAll') {
+                await Task.deleteMany({ isTrashed: true });
+                await Notification.create({
+                    team: tasks[0].team,
+                    text: `All trashed tasks have been deleted.`,
+                    task: tasks[0]._id,
+                });
+                return res.status(200).json({ message: 'All trashed tasks deleted successfully' });
+            } else {
+                await Task.updateMany({ isTrashed: true }, { isTrashed: false });
+                await Notification.create({
+                    team: tasks[0].team,
+                    text: `All trashed tasks have been restored.`,
+                    task: tasks[0]._id,
+                });
+                return res.status(200).json({ message: 'All trashed tasks restored successfully' });
+            }
+        }
+
+        return res.status(400).json({ message: 'Invalid action type' });
+
     } catch (error) {
         return res.status(500).json({ message: 'Internal server error: ' + error.message });
     }
-}
+};
+
 // export const registerUser = async (req, res) => {
 //     try {
         

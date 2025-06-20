@@ -1,20 +1,41 @@
 import React from 'react'
-import { tasks } from '@/assets/data'
+
 import TaskTable from '@/components/ui/TaskTable'
 import { Button } from '@/components/ui/button'
 
 import { BiTrash, BiReset } from 'react-icons/bi'
 import CustomDialog from '@/components/ui/CustomDialog'
+import { useDeleteRestoreTaskMutation, useGetTasksQuery } from '@/redux/slices/api/taskApiSlice'
+import { toast } from 'sonner'
 
 const Trash = () => {
-  console.log(tasks)
-  const trashedtasks = tasks.filter(task => task.isTrashed === true)
-  console.log(trashedtasks)
-  const handleRestoreAllButton = () => {
+
+  const {data: trashedTasks, isLoading, error } = useGetTasksQuery({
+    isTrashed: true
+  });
+  const [deleteRestoreTask] = useDeleteRestoreTaskMutation();
+
+  console.log(trashedTasks)
+
+  const handleRestoreAllButton = async () => {
     console.log('restore all')
+    try {
+      await deleteRestoreTask({ actionType: 'restoreAll' }).unwrap();
+      toast.success('All tasks restored successfully!');
+    } catch (error) {
+      console.error('Error restoring all tasks:', error);
+      toast.error('Failed to restore all tasks: ' + error.data?.message || error.message);
+    }
   }
-  const handleDeleteAllTaskButton = () => {
+  const handleDeleteAllTaskButton = async () => {
     console.log('delete all')
+    try {
+      await deleteRestoreTask({ actionType: 'deleteAll' }).unwrap();
+      toast.success('All tasks deleted successfully!');
+    } catch (error) {
+      console.error('Error deleting all tasks:', error);
+      toast.error('Failed to delete all tasks: ' + error.data?.message || error.message);
+    }
   }
   return (
 
@@ -48,7 +69,10 @@ const Trash = () => {
           
         </div>
       </div>
-      <TaskTable tasks={trashedtasks} isTrash={true} />
+      <div className='p-2 bg-background rounded-md shadow-md overflow-x-auto border-border border'>
+
+      <TaskTable tasks={trashedTasks} isTrash={true} />
+      </div>
     </div>
   )
 }
