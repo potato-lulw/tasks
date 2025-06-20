@@ -65,7 +65,8 @@ const TaskTable = ({ tasks, isTrash = false }) => {
             </TableHeader>
 
             <TableBody>
-                {tasks.map((task) => (
+            
+                {tasks && tasks.map((task) => (
                     <TableRow key={task._id}>
                         <TableCell className="align-middle font-medium max-w-[100px] sm:max-w-none overflow-auto whitespace-nowrap text-ellipsis">
                             <div className="inline-flex items-center gap-2">

@@ -7,6 +7,7 @@ import { BiTrash, BiReset } from 'react-icons/bi'
 import CustomDialog from '@/components/ui/CustomDialog'
 import { useDeleteRestoreTaskMutation, useGetTasksQuery } from '@/redux/slices/api/taskApiSlice'
 import { toast } from 'sonner'
+import SkeletonTable from '@/components/ui/SkeletonTable'
 
 const Trash = () => {
 
@@ -71,7 +72,8 @@ const Trash = () => {
       </div>
       <div className='p-2 bg-background rounded-md shadow-md overflow-x-auto border-border border'>
 
-      <TaskTable tasks={trashedTasks} isTrash={true} />
+      {isLoading ? <SkeletonTable rowCount={5} isTrash={true} /> : <TaskTable tasks={trashedTasks} isTrash={true} />}
+      
       </div>
     </div>
   )
