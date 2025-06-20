@@ -22,14 +22,14 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { useEditTaskMutation } from '@/redux/slices/api/taskApiSlice';
+import { useDeleteTaskMutation, useEditTaskMutation } from '@/redux/slices/api/taskApiSlice';
 import { toast } from 'sonner';
 
 const TaskDetailsCard = ({ task }) => {
     const { data: users, isLoading: usersLoading } = useGetTeamQuery();
     const navigate = useNavigate();
     const [editTask, isLoading, error] = useEditTaskMutation();
-
+    const [deleteTask] = useDeleteTaskMutation();
     const [subTaskTitle, setSubTaskTitle] = useState("");
     const [subTaskDate, setSubTaskDate] = useState("");
     const [subTaskTag, setSubTaskTag] = useState("");
@@ -54,8 +54,15 @@ const TaskDetailsCard = ({ task }) => {
         }
     };
 
-    const handleDelete = () => {
-        console.log("Deleting task", task._id);
+    const handleDelete = async (id) => {
+        console.log("Deleting task", id);
+        try {
+            await deleteTask(id).unwrap();
+            toast.success("Task deleted successfully!");
+        } catch (error) {
+            console.error("Error deleting task:", error);
+            toast.error("Failed to delete task: " + (error.data?.message || error.message));
+        }
     };
 
     const handleSubtaskSubmit = () => {

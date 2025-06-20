@@ -8,12 +8,14 @@ import TaskDetailsCard from '@/components/ui/TaskDetailsCard';
 import TaskDetailsCardSkeleton from '@/components/ui/TaskDetailsCardSkeleton';
 import TaskDetailsList from '@/components/ui/TaskDetailsList';
 import AddTaskForm from '@/components/ui/AddTaskForm';
-import { users } from '@/assets/data';
+
 import CustomDialog from '@/components/ui/CustomDialog';
 import { useParams } from 'react-router-dom';
-import { useGetTasksQuery } from '@/redux/slices/api/taskApiSlice';
+import { useCreateTaskMutation, useGetTasksQuery } from '@/redux/slices/api/taskApiSlice';
 import { useForm, FormProvider } from 'react-hook-form';
 import TaskStageDialog from '@/components/ui/TaskStageDialogue';
+import { useGetTeamQuery } from '@/redux/slices/api/userApiSlice';
+import { toast } from 'sonner';
 
 const Task = () => {
   const { status } = useParams();
@@ -21,6 +23,8 @@ const Task = () => {
     stage: status,
     isTrashed: "false",
   });
+  const { data: users = [] } = useGetTeamQuery();
+  const [createTask] = useCreateTaskMutation();
 
   const [list, setList] = useState(false);
 
@@ -35,8 +39,17 @@ const Task = () => {
 
   const methods = useForm({ defaultValues });
 
-  const handleSubmit = async (data) => {
+  const handleCreateTask = async (data) => {
     console.log("✅ Submitted Task:", data);
+    // title, team, stage, priority, assets
+    try {
+      await createTask({title: data.title, team: data.assignedUsers, stage: data.stage, priority: data.priority}).unwrap();
+      methods.reset(defaultValues);
+      toast.success("Task created successfully!");
+    } catch (error) {
+      console.error("Error creating task:", error);
+      toast.error("Failed to create task: " + (error?.data?.message || error?.error));
+    }
     // send it to backend via mutation or api
   };
 
@@ -55,7 +68,7 @@ const Task = () => {
         <CustomDialog
           triggerLabel='Create Task'
           description='Fill in the details below to create a task.'
-          onSubmit={methods.handleSubmit(handleSubmit)}
+          onSubmit={methods.handleSubmit(handleCreateTask)}
           submitLabel='Submit'
           title='Create Task'
           triggerIcon={<BiMessageAltAdd size={16} />}

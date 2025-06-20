@@ -1,11 +1,13 @@
-import mongoose from "mongoose";
+import mongoose, { now } from "mongoose";
 import Notification from "../models/notification.js";
 import Task from "../models/task.js";
 import User from "../models/user.js";
 
 export const createTask = async (req, res) => {
     try {
-        const {title, team, stage, date, priority, assets} = req.body;
+        let { title, team, stage, priority, assets } = req.body;
+        let date = req.body.date ? new Date(req.body.date) : new Date();
+     
         let task = await Task.create({title, team, date, stage: stage.toLowerCase(), priority : priority.toLowerCase(), assets});
         if (!task) {
             return res.status(400).json({ message: 'Task creation failed' });
