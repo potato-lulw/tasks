@@ -65,13 +65,15 @@ const TaskTable = ({ tasks, isTrash = false }) => {
             </TableHeader>
 
             <TableBody>
-            
+
                 {tasks && tasks.map((task) => (
                     <TableRow key={task._id}>
-                        <TableCell className="align-middle font-medium max-w-[100px] sm:max-w-none overflow-auto whitespace-nowrap text-ellipsis">
-                            <div className="inline-flex items-center gap-2">
-                                <div className={`${TASK_TYPE[task.stage]} rounded-full h-4 w-4`}></div>
-                                {task.title}
+                        <TableCell className="align-middle font-medium">
+                            <div className="inline-flex items-center gap-2 max-w-[150px] overflow-hidden">
+                                <div className={`${TASK_TYPE[task.stage]} rounded-full h-4 w-4`} />
+                                <p className="overflow-hidden whitespace-nowrap text-ellipsis">
+                                    {task.title}
+                                </p>
                             </div>
                         </TableCell>
 
@@ -110,24 +112,24 @@ const TaskTable = ({ tasks, isTrash = false }) => {
                                 <CustomDialog
                                     title='Restore this task?'
                                     triggerLabel=""
-                                    triggerIcon={<BiRecycle size={20} className="text-green-500"/>}
+                                    triggerIcon={<BiRecycle size={20} className="text-green-500" />}
                                     onSubmit={() => handleRestoreButton(task._id)}
                                     description='Are you sure you want to restore this task?'
                                     submitLabel='Restore'
                                     customCss=''
                                 />
-                                
 
-                                <CustomDialog 
-                                    title='Delete this task?' 
-                                    triggerLabel="" 
-                                    triggerIcon={<BiTrash size={20} 
-                                    className="text-destructive" />} 
-                                    description='Are you sure you want to delete this task?' 
-                                    submitLabel='Delete' 
-                                    onSubmit={()=>handleDeleteButton(task._id)}
-                                    customCss=''  />
-                                
+
+                                <CustomDialog
+                                    title='Delete this task?'
+                                    triggerLabel=""
+                                    triggerIcon={<BiTrash size={20}
+                                        className="text-destructive" />}
+                                    description='Are you sure you want to delete this task?'
+                                    submitLabel='Delete'
+                                    onSubmit={() => handleDeleteButton(task._id)}
+                                    customCss='' />
+
                             </div>
                         </TableCell>}
                     </TableRow>
