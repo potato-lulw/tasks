@@ -165,32 +165,42 @@ export const dashboardStatistics = async (req, res) => {
     }
 }
 export const getTasks = async (req, res) => {
-    try {
-        
-        const { stage, isTrashed } = req.query;
-        console.log('Stage:', stage, 'Is Trashed:', isTrashed);
+  try {
+    const { stage, isTrashed } = req.query;
+    const { userID, isAdmin } = req.user;
 
-        let query = {};
+    console.log('Stage:', stage, 'Is Trashed:', isTrashed);
+    console.log('User ID:', userID, 'Is Admin:', isAdmin);
 
-        // 🔥 Fix: only include isTrashed if explicitly set
-        if (typeof isTrashed !== "undefined") {
-        query.isTrashed = isTrashed === "true"; // string -> boolean
-        }
+    let query = {};
 
-        if (stage) {
-        query.stage = stage;
-        }
-
-        let queryRes = await Task.find(query).populate({path: 'team', select: 'name title email'}).sort({createdAt: -1});
-        
-        if (!queryRes) {
-            return res.status(404).json({ message: 'Tasks not found' });
-        }
-        return res.status(200).json(queryRes); 
-    } catch (error) {
-        return res.status(500).json({ message: 'Internal server error: ' + error.message });
+    // Only show the user's own tasks unless admin
+    if (!isAdmin) {
+      query.team = { $in: [userID] };
     }
+
+    if (typeof isTrashed !== "undefined") {
+      query.isTrashed = isTrashed === "true";
+    }
+
+    if (stage) {
+      query.stage = stage;
+    }
+
+    const tasks = await Task.find(query)
+      .populate({ path: 'team', select: 'name title email' })
+      .sort({ createdAt: -1 });
+
+    if (!tasks || tasks.length === 0) {
+      return res.status(404).json({ message: 'No tasks found' });
+    }
+
+    return res.status(200).json(tasks);
+  } catch (error) {
+    return res.status(500).json({ message: 'Internal server error: ' + error.message });
+  }
 }
+
 export const getTask = async (req, res) => {
     try {
         const { id } = req.params;
