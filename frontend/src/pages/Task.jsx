@@ -112,7 +112,10 @@ const Task = () => {
             {[...Array(5)].map((_, i) => <TaskDetailsCardSkeleton key={i} />)}
           </div>
         ) : list ? (
-          <TaskDetailsList tasks={tasks} />
+          <div className='bg-background p-2 rounded-lg border border-border'>
+
+            <TaskDetailsList tasks={tasks} />
+          </div>
         ) : (
           <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4'>
             {tasks.map((task) => (
